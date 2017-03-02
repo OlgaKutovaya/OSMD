@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const config = require('../config/config');
 
-mongoose.connect(config.mongoose.host);
+// mongoose.set('debug', true);
 mongoose.Promise = require('bluebird');
+mongoose.connect(config.mongoose.host);
 
 module.exports = mongoose;

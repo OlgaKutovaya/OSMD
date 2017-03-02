@@ -1,11 +1,14 @@
 const router = require('express').Router();
 const User = require('../../models/user');
-const passport = require('../../libs/passport');
 const config = require('../../config/config');
 const jwt = require('jsonwebtoken');
+const passportJwtAuth = require('../../middleware/passport-jwt-auth');
+const checkAdmin = require('../../middleware/checkAdmin');
+const mailer = require('../../libs/mailer');
 
 router.get('/', (req, res, next) => {
   User.find()
+    .lean()
     .then(users => {
       res.json({
         success: true,
@@ -16,33 +19,53 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/register', (req, res, next) => {
+  const password = req.body.password;
+  if (!password || password.length < 6) {
+    return res.status(400).json({
+      error: {
+        message: 'Password must be greater or equal 6 symbols'
+      }
+    });
+  }
   const newUser = new User(req.body);
   User.createUser(newUser)
     .then(user => {
+      User.confirmEmail(user._id);
       res.json({
         success: true,
-        user
-      })
+        message: 'You have successfully registered'
+      });
     }).catch(err => next(err));
 });
 
 router.post('/login', (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!email || !password) {
+      return res.status(400).json({
+        error: {
+          message: 'Email or Password is empty'
+        }
+      });
+    }
     User.findUserByEmail(req.body.email)
       .select('+password')
       .select('-createdAt -updatedAt')
       .then(user => {
         if (!user) {
-          res.status(404).json({
-            success: false,
-            message: 'User not found'
+          return res.status(404).json({
+            error: {
+              message: 'User not found'
+            }
           });
         }
         User.checkPassword(req.body.password, user.password)
           .then(isMatch => {
             if (!isMatch) {
               return res.status(403).json({
-                success: false,
-                message: 'Invalid password'
+                error: {
+                  message: 'Invalid password'
+                }
               });
             }
             user = user.toObject();
@@ -59,16 +82,39 @@ router.post('/login', (req, res, next) => {
               });
             });
 
-          })
+          });
       }).catch(err => next(err));
   }
 );
 
-router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/confirm', (req, res, next) => {
+  //confirm?userId&redirectUrl&token
+  /*mailer.sendMail(config.mailer.mailOptions, (err, info) => {
+    if (err) {
+      return next(err);
+    }
+    console.log(info);
+    res.json({
+      success: true,
+      info
+    });
+  });*/
+});
+
+router.get('/profile', passportJwtAuth, (req, res) => {
+  const user = Object.assign({}, req.user);
+  delete user.role;
   res.json({
     success: true,
-    profile: true
-  })
+    profile: user
+  });
+});
+
+router.get('/admin', passportJwtAuth, checkAdmin, (req, res, next) => {
+  res.json({
+    success: true,
+    admin: true
+  });
 });
 
 router.get('/logout', (req, res) => {

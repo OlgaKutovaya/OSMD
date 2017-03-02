@@ -11,9 +11,6 @@ class ServerTime {
     return this.startTime;
   }
 
-  get currentTime() {
-    return new Date();
-  }
 }
 
 module.exports = new ServerTime();

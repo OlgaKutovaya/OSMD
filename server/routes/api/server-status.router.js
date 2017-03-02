@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
   res.json({
     started: serverTime.startTime,
     uptime: serverTime.uptime,
-    currentTime:serverTime.currentTime
+    currentTime: new Date()
   });
 });
 

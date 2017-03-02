@@ -1,4 +1,5 @@
 const http = require('http');
+const mongoose = require('../libs/mongoose');
 
 class HttpError extends Error {
   constructor(status, message) {
@@ -11,5 +12,6 @@ class HttpError extends Error {
 }
 
 module.exports = {
-  HttpError
+  HttpError,
+  MongooseError: mongoose.Error
 };

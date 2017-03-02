@@ -28,7 +28,7 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
   }, (email, password, done) => {
     User.findUserByEmail(email)
-      .select('+password')
+      .select('-password')
       .then(user => {
         if (!user) {
           return done(null, false, {message: 'Invalid username'});
@@ -47,6 +47,8 @@ passport.use(new LocalStrategy({
 
 passport.use(new JwtStrategy(passportJwtConfig, (jwt_payload, done) => {
   User.findUserById(jwt_payload._id)
+    .select('+role')
+    .lean()
     .then(user => {
       if (!user) {
         return done(null, false);

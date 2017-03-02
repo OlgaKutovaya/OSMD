@@ -1,8 +1,8 @@
-const notFound = (res) => {
+const notFound = (res, message) => {
   return res.status(404).json({
     success: false,
-    message: 'Document Not Found'
-  })
+    message: message
+  });
 };
 
 module.exports = {

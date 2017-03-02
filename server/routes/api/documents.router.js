@@ -1,55 +1,71 @@
 const router = require('express').Router();
 const Document = require('../../models/document');
 const resMsg = require('../../utils/res-msg');
+const checkMongoId = require('../../middleware/check-mongoId');
 
-router.get('/', (req, res, next) => {
-  Document.find()
-    .then(
-      (docs) => res.json({
-        success: true,
-        documents: docs
-      }))
-    .catch(err => next(err));
-});
+router.route('/')
+  .get((req, res, next) => {
+    Document.find()
+      .then(
+        (docs) => res.json({
+          success: true,
+          documents: docs
+        }))
+      .catch(err => next(err));
+  })
 
-router.post('/', (req, res, next) => {
-  Document.createDocument(req.body)
-    .then(
-      (doc) => res.json({
-        success: true,
-        doc
-      }))
-    .catch(err => next(err));
-
-});
-router.delete('/:id', (req, res, next) => {
-  Document.removeDocument(req.params.id)
-    .then(
-      (doc) => {
-        if (!doc) {
-          return resMsg.notFound(res);
-        }
-        res.json({
+  .post((req, res, next) => {
+    Document.createDocument(req.body)
+      .then(
+        (doc) => res.json({
           success: true,
           document: doc
-        })
-      })
-    .catch(err => next(err));
-});
-router.put('/:id', (req, res, next) => {
-  Document.updateDocument(req.params.id, req.body)
-    .then(
-      (doc) => {
+        }))
+      .catch(err => next(err));
+  });
+
+router.route('/:id')
+  .get(checkMongoId, (req, res, next) => {
+    const id = req.params.id;
+    Document.findDocumentById(id)
+      .then((doc) => {
         if (!doc) {
-          return resMsg.notFound(res);
+          return resMsg.notFound(res, 'Document not found');
         }
-        res.json({
+        return res.json({
           success: true,
           document: doc
+        });
+      }).catch(err => next(err));
+  })
+  .delete(checkMongoId, (req, res, next) => {
+    Document.removeDocumentById(req.params.id)
+      .then(
+        (doc) => {
+          if (!doc) {
+            return resMsg.notFound(res, 'Document not found');
+          }
+          res.json({
+            success: true,
+            document: doc
+          });
         })
-      })
-    .catch(err => next(err));
-});
+      .catch(err => next(err));
+  })
+  .put(checkMongoId, (req, res, next) => {
+    Document.updateDocumentById(req.params.id, req.body)
+      .then(
+        (doc) => {
+          if (!doc) {
+            return resMsg.notFound(res, 'Document not found');
+          }
+          res.json({
+            success: true,
+            document: doc
+          });
+        })
+      .catch(err => next(err));
+  });
 
 
 module.exports = router;

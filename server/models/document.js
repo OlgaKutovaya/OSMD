@@ -3,17 +3,20 @@ const mongoose = require('../libs/mongoose');
 const documentSchema = mongoose.Schema({
     title: {
       type: String,
-      require: true,
+      required: true,
+      minlength: 5
     },
     description: {
-      type: String,
+      type: String
     },
-    link: {
+    downloadLink: {
       type: String,
+      required: true
     },
     price: {
       type: Number,
-      default: 0
+      default: 0,
+      min: [0, 'Price must be posititve value']
     }
   },
   {timestamps: true}
@@ -23,13 +26,18 @@ documentSchema.statics.createDocument = (newDocument) => {
   return new Document(newDocument).save();
 };
 
-documentSchema.statics.removeDocument = (id) => {
+documentSchema.statics.removeDocumentById = (id) => {
   return Document.findByIdAndRemove(id).lean();
 };
 
-documentSchema.statics.updateDocument = (id, newDocument) => {
+documentSchema.statics.updateDocumentById = (id, newDocument) => {
   return Document.findByIdAndUpdate(id, newDocument, {new: true}).lean();
 };
+
+documentSchema.statics.findDocumentById = (id) => {
+  return Document.findById(id);
+};
+
 
 const Document = mongoose.model('Document', documentSchema);
 

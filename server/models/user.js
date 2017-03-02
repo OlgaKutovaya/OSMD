@@ -1,19 +1,37 @@
 const mongoose = require('../libs/mongoose');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
     email: {
       type: String,
-      require: true,
-      unique: true
+      required: true,
+      unique: true,
+      validate: {
+        validator: (val) => {
+          return validator.isEmail(val);
+        },
+        message: '{VALUE} is not a valid email'
+      }
     },
     username: {
       type: String,
-      require: true
+      required: true,
+      minlength: 3
     },
     password: {
       type: String,
-      require: true,
+      required: true,
+      select: false,
+      minlength: 6
+    },
+    confirmed: {
+      type: Boolean,
+      default: false
+    },
+    role: {
+      type: [String],
+      default: ['user'],
       select: false
     }
   },
@@ -37,6 +55,11 @@ userSchema.statics.findUserById = (id) => {
 userSchema.statics.findUserByEmail = (email) => {
   return User.findOne({email});
 };
+
+/*userSchema.statics.confirmEmail = (userId) => {
+  const newConfirm = new Confirm({userId});
+  console.log(newConfirm);
+};*/
 
 
 const User = mongoose.model('User', userSchema);
