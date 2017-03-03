@@ -1,12 +1,20 @@
-const mongoose = require('../libs/mongoose');
-const bcrypt = require('bcrypt');
-const validator = require('validator');
+/**
+ * Module dependencies
+ */
 
+const mongoose = require('../libs/mongoose'),
+  bcrypt = require('bcrypt'),
+  validator = require('validator'),
+  findOrCreate = require('mongoose-findorcreate');
+
+/**
+ * Mongoose User Schema
+ */
 const userSchema = new mongoose.Schema({
     email: {
       type: String,
-      required: true,
       unique: true,
+      required: true,
       validate: {
         validator: (val) => {
           return validator.isEmail(val);
@@ -15,13 +23,10 @@ const userSchema = new mongoose.Schema({
       }
     },
     username: {
-      type: String,
-      required: true,
-      minlength: 3
+      type: String
     },
     password: {
       type: String,
-      required: true,
       select: false,
       minlength: 6
     },
@@ -34,38 +39,71 @@ const userSchema = new mongoose.Schema({
       type: [String],
       default: ['user'],
       select: false
+    },
+    googleId: {
+      type: String
     }
   },
   {timestamps: true}
 );
 
+/**
+ * Plugins init
+ */
+
+userSchema.plugin(findOrCreate);
+
+/**
+ * Schema static methods
+ */
+
+/**
+ *
+ * @param newUser:Object
+ * @returns {Promise|Promise.<user>|*}
+ */
 userSchema.statics.createUser = (newUser) => {
-  return User.create(newUser);
+  return bcrypt.hash(newUser.password, 10).then(hash => {
+    newUser.password = hash;
+    return User.create(newUser);
+  });
 };
 
-userSchema.pre('save', function (next) {
-  bcrypt.hash(this.password, 10).then(hash => {
-    this.password = hash;
-    next();
-  });
-});
-
+/**
+ *
+ * @param plainPassword:string
+ * @param hash:string
+ */
 userSchema.statics.checkPassword = (plainPassword, hash) => {
   return bcrypt.compare(plainPassword, hash);
 };
-
+/**
+ *
+ * @param id:ObjectId
+ * @returns {Query}
+ */
 userSchema.statics.findUserById = (id) => {
   return User.findById(id);
 };
-userSchema.statics.findUserByEmail = (email) => {
-  return User.findOne({email});
+
+/**
+ *
+ * @param query
+ * @returns {*|Query}
+ */
+userSchema.statics.findUserByQuery = (query) => {
+  return User.findOne(query);
 };
+
 
 /*userSchema.statics.confirmEmail = (userId) => {
  const newConfirm = new Confirm({userId});
  console.log(newConfirm);
  };*/
 
+/**
+ * Init User model
+ */
 
 const User = mongoose.model('User', userSchema);
 

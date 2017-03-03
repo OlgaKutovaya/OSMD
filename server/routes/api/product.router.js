@@ -1,13 +1,18 @@
-const router = require('express').Router();
-const Product = require('../../models/product');
-const resMsg = require('../../utils/res-msg');
-const checkMongoId = require('../../middleware/check-mongoId');
-const checkAdmin = require('../../middleware/checkAdmin');
-const passportJwtAuth = require('../../middleware/passport-jwt-auth');
-const Purchase = require('../../models/purchase');
-const _ = require('lodash');
+/**
+ * Module dependencies
+ */
 
+const router = require('express').Router(),
+  Product = require('../../models/product'),
+  resMsg = require('../../utils/res-msg'),
+  checkMongoId = require('../../middleware/check-mongoId'),
+  checkAdmin = require('../../middleware/checkAdmin'),
+  passportJwtAuth = require('../../middleware/passport-jwt-auth'),
+  Purchase = require('../../models/purchase');
 
+/**
+ * GET all products
+ */
 router.route('/')
   .get((req, res, next) => {
     Product.find()
@@ -20,6 +25,10 @@ router.route('/')
       .catch(err => next(err));
   })
 
+  /**
+   *POST product (only auth admin users)
+   */
+
   .post(passportJwtAuth, checkAdmin, (req, res, next) => {
     Product.createProduct(req.body)
       .then(product =>
@@ -29,6 +38,10 @@ router.route('/')
         }))
       .catch(err => next(err));
   });
+
+/**
+ *GET product by ID (all users)
+ */
 
 router.route('/:id')
   .get(checkMongoId, (req, res, next) => {
@@ -44,6 +57,11 @@ router.route('/:id')
         });
       }).catch(err => next(err));
   })
+
+  /**
+   * DELETE product by ID (only auth admin users)
+   */
+
   .delete(passportJwtAuth, checkAdmin, checkMongoId, (req, res, next) => {
     Product.removeProductById(req.params.id)
       .then(product => {
@@ -57,6 +75,11 @@ router.route('/:id')
       })
       .catch(err => next(err));
   })
+
+  /**
+   * PUT (UPDATE) product by ID (only auth admin users)
+   */
+
   .put(passportJwtAuth, checkAdmin, checkMongoId, (req, res, next) => {
     Product.updateProductById(req.params.id, req.body)
       .then(product => {
@@ -70,6 +93,10 @@ router.route('/:id')
       })
       .catch(err => next(err));
   });
+
+/**
+ * Buy product (auth users)
+ */
 
 router.post('/buy/:id', passportJwtAuth, checkMongoId, (req, res, next) => {
   const productId = req.params.id;

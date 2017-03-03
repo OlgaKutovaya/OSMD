@@ -1,9 +1,9 @@
-const Promise = require('bluebird');
-const mongoose = require('../libs/mongoose');
-const chalk = require('chalk');
-const log = console.log;
-let User;
-let Product;
+const
+  Promise = require('bluebird'),
+  mongoose = require('../libs/mongoose'),
+  chalk = require('chalk'),
+  log = console.log;
+let User, Product;
 
 // mongoose.set('debug', true);
 
@@ -11,22 +11,22 @@ const users = [
   {
     username: 'name1',
     email: 'test@gmail.com',
-    password: 123456
+    password: '123456'
   },
   {
     username: 'name2',
     email: 'test2@gmail.com',
-    password: 123456
+    password: '123456'
   },
   {
     username: 'name3',
     email: 'test3@gmail.com',
-    password: 123456
+    password: '123456'
   },
   {
     username: 'admin',
     email: 'admin@gmail.com',
-    password: 123456,
+    password: '123456',
     role: ['admin']
   }
 ];
@@ -62,7 +62,8 @@ mongoose.connection.dropDatabase()
     );
   })
   .then(() => {
-    return User.createUser(users);
+    // return User.createUser(users);
+    return Promise.all(users.map(user => User.createUser(user)));
   })
   .then(users => {
     log(users);

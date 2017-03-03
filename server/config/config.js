@@ -1,5 +1,6 @@
-const _ = require('lodash');
-const configProduction = require('./config.production');
+const
+  _ = require('lodash'),
+  configProduction = require('./config.production');
 
 const config = {
   server: {
@@ -15,7 +16,13 @@ const config = {
       host: 'mongodb://osmdadmin:123456@ds113650.mlab.com:13650/osmd'
     }
   },
-  passport: {},
+  passport: {
+    googleOptions: {
+      clientID: '441428006509-34qjiv949e9f9h5bmbueuleqchjvto6m.apps.googleusercontent.com',
+      clientSecret: 'zgyIIPOkxtrgUGObwkt94Bc_',
+      callbackURL: 'http://127.0.0.1:3000/api/v1/users/login/google/callback'
+    }
+  },
   jwt: {
     secret: 'H1teNDQcxrkxKl4vmql',
     options: {

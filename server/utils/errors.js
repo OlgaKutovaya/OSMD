@@ -1,5 +1,6 @@
-const http = require('http');
-const mongoose = require('../libs/mongoose');
+const
+  http = require('http'),
+  mongoose = require('../libs/mongoose');
 
 class HttpError extends Error {
   constructor(status, message) {

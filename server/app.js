@@ -1,56 +1,105 @@
-const express = require('express');
-const path = require('path');
-// const favicon = require('serve-favicon');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
-const config = require('./config/config');
-const session = require('express-session');
-const passport = require('./libs/passport');
-const flash = require('connect-flash');
-const _ = require('lodash');
-const helmet = require('helmet');
-const cors = require('cors');
-const mongoose = require('./libs/mongoose');
-const MongoStore = require('connect-mongo')(session);
-const errors = require('./utils/errors');
-const port = config.server.port;
+/**
+ * Module dependencies
+ */
+const
+  express = require('express'),
+  path = require('path'),
+  // favicon = require('serve-favicon'),
+  logger = require('morgan'),
+  bodyParser = require('body-parser'),
+  config = require('./config/config'),
+  session = require('express-session'),
+  passport = require('./libs/passport'),
+  flash = require('connect-flash'),
+  _ = require('lodash'),
+  helmet = require('helmet'),
+  cors = require('cors'),
+  mongoose = require('./libs/mongoose'),
+  MongoStore = require('connect-mongo')(session),
+  errors = require('./utils/errors'),
+  port = config.server.port;
 
-/*routes*/
+/**
+ * Routes dependecies
+ */
 const index = require('./routes/index');
 const apiRoutes = require('./routes/api');
 
-/*base app*/
+/**
+ * Express App
+ */
 const app = express();
 
-// view engine setup
+/**
+ * View engine settings
+ */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+/**
+ * Helmet configuration
+ */
 app.use(helmet(config.helmet));
+
+
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+/**
+ * Session config
+ */
 app.use(session(_.merge(true, config.session,
   {store: new MongoStore({mongooseConnection: mongoose.connection})}
 )));
+
+/**
+ * Passport init
+ */
 app.use(passport.initialize());
 app.use(passport.session());
 
+/**
+ * Morgan init
+ */
 app.use(logger('dev'));
 
+/**
+ * Bodyparser init
+ */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+/**
+ * Flash session init
+ */
 app.use(flash());
+
+/**
+ * Static routes
+ */
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * Routes init
+ */
 app.use('/', index);
 app.use(config.server.apiRoute, cors(), apiRoutes);
 
-// catch 404 and forward to error handler
+/**
+ * Error handlers
+ */
+
+/**
+ * catch 404 and forward to error handler
+ */
+
 app.use((req, res, next) => {
   const HttpError = errors.HttpError;
   next(new HttpError(404));
 });
 
-// error handler
+/**
+ * Common  error handler
+ */
 app.use((err, req, res, next) => {
 
   // set locals, only providing error in development
@@ -65,7 +114,9 @@ app.use((err, req, res, next) => {
   }
 
   res.status(err.status || 500);
-  console.error(err);
+  if (err.status !== 404) {
+    console.error(err);
+  }
   if (/^\/api\/v\d/.test(req.url)) {
     res.json({err});
   } else {

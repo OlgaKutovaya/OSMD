@@ -1,5 +1,6 @@
-const router = require('express').Router();
-const serverTime = require('../../utils/server-time');
+const
+  router = require('express').Router(),
+  serverTime = require('../../utils/server-time');
 
 
 router.get('/', (req, res) => {

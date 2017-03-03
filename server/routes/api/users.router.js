@@ -1,13 +1,24 @@
-const router = require('express').Router();
-const User = require('../../models/user');
-const config = require('../../config/config');
-const jwt = require('jsonwebtoken');
-const passportJwtAuth = require('../../middleware/passport-jwt-auth');
-const checkAdmin = require('../../middleware/checkAdmin');
-const mailer = require('../../libs/mailer');
-const checkMongoId = require('../../middleware/check-mongoId');
-const resMsg = require('../../utils/res-msg');
+/**
+ * Module dependencies
+ */
 
+const
+  router = require('express').Router(),
+  User = require('../../models/user'),
+  config = require('../../config/config'),
+  jwt = require('jsonwebtoken'),
+  passportJwtAuth = require('../../middleware/passport-jwt-auth'),
+  passport = require('../../libs/passport'),
+  checkAdmin = require('../../middleware/checkAdmin'),
+  // mailer = require('../../libs/mailer'),
+  checkMongoId = require('../../middleware/check-mongoId'),
+  resMsg = require('../../utils/res-msg'),
+  {registerValidator} = require('../../utils/validation-utils'),
+  _ = require('lodash');
+
+/**
+ *GET all users
+ */
 
 router.get('/', (req, res, next) => {
   User.find()
@@ -21,29 +32,47 @@ router.get('/', (req, res, next) => {
 
 });
 
+/**
+ *Registration route
+ */
 
 router.post('/register', (req, res, next) => {
-  const password = req.body.password;
-  if (!password || password.length < 6) {
+  const errors = registerValidator(req.body);
+  if (errors.length) {
     return res.status(400).json({
       error: {
-        message: 'Password must be greater or equal 6 symbols'
+        errors: errors
       }
     });
   }
-  User.createUser({
-    username: req.body.username,
-    email: req.body.email,
-    password: password
-  })
+  User.findUserByQuery({email: req.body.email})
     .then(user => {
-      User.confirmEmail(user._id);
-      res.json({
-        success: true,
-        message: 'You have successfully registered'
-      });
+      if (user) {
+        return res.status(400).json({
+          error: {
+            message: `Email ${user.email} is already registered`
+          }
+        });
+      }
+      User.createUser({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password
+      }).then(user => {
+        // User.confirmEmail(user._id);
+        res.json({
+          success: true,
+          message: 'You have successfully registered'
+        });
+      }).catch(err => next(err));
     }).catch(err => next(err));
+
 });
+
+/**
+ *
+ *Login route (give token to user)
+ */
 
 router.post('/login', (req, res, next) => {
     const email = req.body.email;
@@ -55,7 +84,8 @@ router.post('/login', (req, res, next) => {
         }
       });
     }
-    User.findUserByEmail(req.body.email)
+
+    User.findUserByQuery({email: req.body.email})
       .select('+password')
       .select('-createdAt -updatedAt')
       .then(user => {
@@ -94,6 +124,29 @@ router.post('/login', (req, res, next) => {
   }
 );
 
+/**
+ * GET Google OAuth2
+ */
+
+router.get('/login/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+router.get('/login/google/callback', passport.authenticate('google', {session: false}), (req, res, next) => {
+  let user = req.user.toObject();
+  user = _.omit(user, ['createdAt', 'updatedAt', 'role']);
+
+  jwt.sign(user, config.jwt.secret, config.jwt.options, (err, token) => {
+    if (err) {
+      return next(err);
+    }
+    return res.json({
+      jwt: token,
+      user: user
+    });
+  });
+});
+
+/**
+ *Confirm Email
+ */
 router.post('/confirm', (req, res, next) => {
   //confirm?userId&redirectUrl&token
   /*mailer.sendMail(config.mailer.mailOptions, (err, info) => {
@@ -108,14 +161,21 @@ router.post('/confirm', (req, res, next) => {
    });*/
 });
 
+/**
+ *Profile route for auth users
+ */
+
 router.get('/profile', passportJwtAuth, (req, res) => {
   const user = Object.assign({}, req.user);
   delete user.role;
   res.json({
-    success: true,
     profile: user
   });
 });
+
+/**
+ * Admin route for users with role 'admin'
+ */
 
 router.get('/admin', passportJwtAuth, checkAdmin, (req, res, next) => {
   res.json({
@@ -124,9 +184,17 @@ router.get('/admin', passportJwtAuth, checkAdmin, (req, res, next) => {
   });
 });
 
+/**
+ * Logout (isn't working yet)
+ */
+
 router.get('/logout', (req, res) => {
   res.redirect('/');
 });
+
+/**
+ * GET User by ID with check valid mongoID middleware
+ */
 
 router.get('/:id', checkMongoId, (req, res, next) => {
   const userId = req.params.id;

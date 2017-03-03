@@ -1,5 +1,14 @@
+/**
+ * Module dependencies
+ */
+
 const mongoose = require('../libs/mongoose');
+
 const ObjectId = mongoose.Schema.Types.ObjectId;
+
+/**
+ * Purchase Schema
+ */
 
 const purchaseSchema = new mongoose.Schema(
   {
@@ -24,6 +33,14 @@ const purchaseSchema = new mongoose.Schema(
   }
 );
 
+/**
+ * Shema static methods
+ */
+/**
+ *
+ * @param user:User
+ * @param product:Product
+ */
 purchaseSchema.statics.createPurchase = (user, product) => {
   return Purchase.create({
     userId: user._id,
@@ -31,6 +48,10 @@ purchaseSchema.statics.createPurchase = (user, product) => {
     price: product.price
   });
 };
+
+/**
+ * Init Purchase model
+ */
 
 const Purchase = mongoose.model('Purchase', purchaseSchema);
 

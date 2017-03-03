@@ -2,11 +2,12 @@
  * Module dependencies.
  */
 
-const app = require('../app');
-const debug = require('debug')('server:www');
-const http = require('http');
-const config = require('../config/config');
-const mongoose = require('../libs/mongoose');
+const
+  app = require('../app'),
+  debug = require('debug')('server:www'),
+  http = require('http'),
+  config = require('../config/config'),
+  mongoose = require('../libs/mongoose');
 
 /**
  * Get port from environment and store in Express.
@@ -91,7 +92,7 @@ mongoose.connection.on('open', (err) => {
   if (err) {
     throw err;
   }
-  console.log(`Mongoose connected to ${config.mongoose.host}`);
+  console.log(`Mongoose connected to ${config.mongoose.mongolab.host}`);
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);

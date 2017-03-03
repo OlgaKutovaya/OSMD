@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const config = require('../config/config');
+const
+  mongoose = require('mongoose'),
+  config = require('../config/config');
 
 // mongoose.set('debug', true);
 mongoose.Promise = require('bluebird');
