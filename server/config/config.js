@@ -8,7 +8,12 @@ const config = {
     apiRoute: '/api/v1'
   },
   mongoose: {
-    host: 'mongodb://localhost/osmd'
+    local: {
+      host: 'mongodb://localhost/osmd'
+    },
+    mongolab: {
+      host: 'mongodb://osmdadmin:123456@ds113650.mlab.com:13650/osmd'
+    }
   },
   passport: {},
   jwt: {

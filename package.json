@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon ./server/bin/www.js"
+    "start": "nodemon ./server/bin/www.js",
+    "createDB": "node ./server/utils/create-db.js"
   },
   "dependencies": {
-    "acl": "^0.4.10",
     "activator": "^3.0.0",
     "async": "^2.1.5",
     "bcrypt": "^1.0.2",

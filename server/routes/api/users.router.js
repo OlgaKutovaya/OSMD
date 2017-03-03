@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const passportJwtAuth = require('../../middleware/passport-jwt-auth');
 const checkAdmin = require('../../middleware/checkAdmin');
 const mailer = require('../../libs/mailer');
+const checkMongoId = require('../../middleware/check-mongoId');
+const resMsg = require('../../utils/res-msg');
+
 
 router.get('/', (req, res, next) => {
   User.find()
@@ -18,6 +21,7 @@ router.get('/', (req, res, next) => {
 
 });
 
+
 router.post('/register', (req, res, next) => {
   const password = req.body.password;
   if (!password || password.length < 6) {
@@ -27,8 +31,11 @@ router.post('/register', (req, res, next) => {
       }
     });
   }
-  const newUser = new User(req.body);
-  User.createUser(newUser)
+  User.createUser({
+    username: req.body.username,
+    email: req.body.email,
+    password: password
+  })
     .then(user => {
       User.confirmEmail(user._id);
       res.json({
@@ -90,15 +97,15 @@ router.post('/login', (req, res, next) => {
 router.post('/confirm', (req, res, next) => {
   //confirm?userId&redirectUrl&token
   /*mailer.sendMail(config.mailer.mailOptions, (err, info) => {
-    if (err) {
-      return next(err);
-    }
-    console.log(info);
-    res.json({
-      success: true,
-      info
-    });
-  });*/
+   if (err) {
+   return next(err);
+   }
+   console.log(info);
+   res.json({
+   success: true,
+   info
+   });
+   });*/
 });
 
 router.get('/profile', passportJwtAuth, (req, res) => {
@@ -119,6 +126,21 @@ router.get('/admin', passportJwtAuth, checkAdmin, (req, res, next) => {
 
 router.get('/logout', (req, res) => {
   res.redirect('/');
+});
+
+router.get('/:id', checkMongoId, (req, res, next) => {
+  const userId = req.params.id;
+  User.findUserById(userId)
+    .lean()
+    .then(user => {
+      if (!user) {
+        return resMsg.notFound(res, 'User not found');
+      }
+      res.json({
+        success: true,
+        user: user
+      });
+    }).catch(err => next(err));
 });
 
 module.exports = router;

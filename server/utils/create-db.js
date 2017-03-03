@@ -3,7 +3,7 @@ const mongoose = require('../libs/mongoose');
 const chalk = require('chalk');
 const log = console.log;
 let User;
-let Document;
+let Product;
 
 // mongoose.set('debug', true);
 
@@ -31,21 +31,21 @@ const users = [
   }
 ];
 
-const documents = [
+const products = [
   {
     title: 'document 1',
     description: 'some description text',
-    downloadLink: '/download/doc1.text'
+    downloadLink: '//download/doc1.text'
   },
   {
     title: 'document 2',
     description: 'some description text',
-    downloadLink: '/download/doc2.txt'
+    downloadLink: '//download/doc2.txt'
   },
   {
     title: 'document 3',
     description: 'some description text',
-    downloadLink: '/download/doc3.txt'
+    downloadLink: '//download/doc3.txt'
   },
 
 ];
@@ -54,7 +54,7 @@ mongoose.connection.dropDatabase()
   .then(() => log('Db dropped OK'))
   .then(() => {
     User = require('../models/user');
-    Document = require('../models/document');
+    Product = require('../models/product');
     log(chalk.green('Models created OK'));
     return Promise.all(
       Object.keys(mongoose.models)
@@ -62,7 +62,7 @@ mongoose.connection.dropDatabase()
     );
   })
   .then(() => {
-    return Promise.all(users.map(user => User.createUser(new User(user))));
+    return User.createUser(users);
   })
   .then(users => {
     log(users);
@@ -76,10 +76,10 @@ mongoose.connection.dropDatabase()
     log(chalk.green('Check hash passwords OK'));
   })
   .then(() => {
-    return Promise.all(documents.map(doc => Document.createDocument(new Document(doc))));
+    return Product.createProduct(products);
   })
-  .then(docs => {
-    log(docs);
+  .then(products => {
+    log(products);
     log(chalk.green('Documents added OK'));
     log(chalk.green('All done OK'));
   })

@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
     },
     confirmed: {
       type: Boolean,
-      default: false
+      default: false,
+      select: false
     },
     role: {
       type: [String],
@@ -39,11 +40,15 @@ const userSchema = new mongoose.Schema({
 );
 
 userSchema.statics.createUser = (newUser) => {
-  return bcrypt.hash(newUser.password, 10).then(hash => {
-    newUser.password = hash;
-    return newUser.save();
-  });
+  return User.create(newUser);
 };
+
+userSchema.pre('save', function (next) {
+  bcrypt.hash(this.password, 10).then(hash => {
+    this.password = hash;
+    next();
+  });
+});
 
 userSchema.statics.checkPassword = (plainPassword, hash) => {
   return bcrypt.compare(plainPassword, hash);
@@ -57,9 +62,9 @@ userSchema.statics.findUserByEmail = (email) => {
 };
 
 /*userSchema.statics.confirmEmail = (userId) => {
-  const newConfirm = new Confirm({userId});
-  console.log(newConfirm);
-};*/
+ const newConfirm = new Confirm({userId});
+ console.log(newConfirm);
+ };*/
 
 
 const User = mongoose.model('User', userSchema);
