@@ -22,7 +22,11 @@ const config = {
       clientSecret: 'zgyIIPOkxtrgUGObwkt94Bc_',
       callbackURL: 'http://127.0.0.1:3000/api/v1/users/login/google/callback'
     },
-    facebookAuthOptions: {},
+    facebookAuthOptions: {
+      clientID: '393451751013103',
+      clientSecret: 'cd441f83eb3c78a7cc2068ca3e6429ef',
+      callbackURL: 'http://localhost:3000/api/v1/users/login/facebook/callback'
+    },
     twitterAuthOptions: {}
   },
   jwt: {

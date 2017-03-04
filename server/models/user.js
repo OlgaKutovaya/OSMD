@@ -2,7 +2,8 @@
  * Module dependencies
  */
 
-const mongoose = require('../libs/mongoose'),
+const
+  mongoose = require('../libs/mongoose'),
   bcrypt = require('bcrypt'),
   validator = require('validator'),
   findOrCreate = require('mongoose-findorcreate');
@@ -10,38 +11,52 @@ const mongoose = require('../libs/mongoose'),
 /**
  * Mongoose User Schema
  */
-const userSchema = new mongoose.Schema({
-    email: {
-      type: String,
-      unique: true,
-      required: true,
-      validate: {
-        validator: (val) => {
-          return validator.isEmail(val);
-        },
-        message: '{VALUE} is not a valid email'
+const userSchema = new mongoose.Schema(
+  {
+    local: {
+      email: {
+        type: String,
+        validate: {
+          validator: (val) => {
+            return validator.isEmail(val);
+          },
+          message: '{VALUE} is not a valid email'
+        }
+      },
+      password: {
+        type: String,
+        select: false
+      },
+      username: {
+        type: String
+      },
+      confirmed: {
+        type: Boolean,
+        default: false
       }
     },
-    username: {
-      type: String
+    google: {
+      id: String,
+      token: String,
+      email: String,
+      name: String
     },
-    password: {
-      type: String,
-      select: false,
-      minlength: 6
+    facebook: {
+      id: String,
+      token: String,
+      email: String,
+      name: String
     },
-    confirmed: {
-      type: Boolean,
-      default: false,
-      select: false
+    twitter: {
+      id: String,
+      token: String,
+      displayName: String,
+      name: String
     },
     role: {
       type: [String],
       default: ['user'],
       select: false
-    },
-    googleId: {
-      type: String
     }
   },
   {timestamps: true}
@@ -59,12 +74,20 @@ userSchema.plugin(findOrCreate);
 
 /**
  *
- * @param newUser:Object
+ * @param user:Object
  * @returns {Promise|Promise.<user>|*}
  */
-userSchema.statics.createUser = (newUser) => {
-  return bcrypt.hash(newUser.password, 10).then(hash => {
-    newUser.password = hash;
+userSchema.statics.createLocalUser = (user) => {
+  return bcrypt.hash(user.password, 10).then(hash => {
+    user.password = hash;
+    const newUser = {
+      local: {
+        email: user.email,
+        password: user.password,
+        username: user.username
+      },
+      role: user.role
+    };
     return User.create(newUser);
   });
 };

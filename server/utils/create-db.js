@@ -3,15 +3,18 @@ const
   mongoose = require('../libs/mongoose'),
   chalk = require('chalk'),
   log = console.log;
+
 let User, Product;
 
 // mongoose.set('debug', true);
 
 const users = [
   {
+
     username: 'name1',
     email: 'test@gmail.com',
     password: '123456'
+
   },
   {
     username: 'name2',
@@ -62,13 +65,12 @@ mongoose.connection.dropDatabase()
     );
   })
   .then(() => {
-    // return User.createUser(users);
-    return Promise.all(users.map(user => User.createUser(user)));
+    return Promise.all(users.map(user => User.createLocalUser(user)));
   })
   .then(users => {
     log(users);
     log(chalk.green('Users added OK'));
-    return User.checkPassword('123456', users[2].password);
+    return User.checkPassword('123456', users[2].local.password);
   })
   .then(passwordIsMatch => {
     if (!passwordIsMatch) {

@@ -4,6 +4,6 @@ const
 
 // mongoose.set('debug', true);
 mongoose.Promise = require('bluebird');
-mongoose.connect(config.mongoose.mongolab.host);
+mongoose.connect(config.mongoose.local.host);
 
 module.exports = mongoose;

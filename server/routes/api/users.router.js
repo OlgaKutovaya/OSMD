@@ -25,8 +25,7 @@ router.get('/', (req, res, next) => {
     .lean()
     .then(users => {
       res.json({
-        success: true,
-        users
+        users: users
       });
     }).catch(err => next(err));
 
@@ -54,14 +53,13 @@ router.post('/register', (req, res, next) => {
           }
         });
       }
-      User.createUser({
+      User.createLocalUser({
         username: req.body.username,
         email: req.body.email,
         password: req.body.password
       }).then(user => {
         // User.confirmEmail(user._id);
         res.json({
-          success: true,
           message: 'You have successfully registered'
         });
       }).catch(err => next(err));
@@ -85,9 +83,10 @@ router.post('/login', (req, res, next) => {
       });
     }
 
-    User.findUserByQuery({email: req.body.email})
-      .select('+password')
-      .select('-createdAt -updatedAt')
+    User.findUserByQuery({'local.email': req.body.email})
+      .select('+local.password')
+      .select('-updatedAt -createdAt')
+      .lean()
       .then(user => {
         if (!user) {
           return res.status(404).json({
@@ -96,7 +95,7 @@ router.post('/login', (req, res, next) => {
             }
           });
         }
-        User.checkPassword(req.body.password, user.password)
+        User.checkPassword(req.body.password, user.local.password)
           .then(isMatch => {
             if (!isMatch) {
               return res.status(403).json({
@@ -105,8 +104,8 @@ router.post('/login', (req, res, next) => {
                 }
               });
             }
-            user = user.toObject();
-            delete user.password;
+
+            user.local = _.omit(user.local, ['password']);
 
             jwt.sign(user, config.jwt.secret, config.jwt.options, (err, token) => {
               if (err) {
@@ -129,6 +128,26 @@ router.post('/login', (req, res, next) => {
 
 router.get('/login/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 router.get('/login/google/callback', passport.authenticate('google', {session: false}), (req, res, next) => {
+  let user = req.user.toObject();
+  user = _.omit(user, ['createdAt', 'updatedAt', 'role']);
+
+  jwt.sign(user, config.jwt.secret, config.jwt.options, (err, token) => {
+    if (err) {
+      return next(err);
+    }
+    return res.json({
+      jwt: token,
+      user: user
+    });
+  });
+});
+
+/**
+ * GET Facebook OAuth
+ */
+
+router.get('/login/facebook', passport.authenticate('facebook', {scope: ['email']}));
+router.get('/login/facebook/callback', passport.authenticate('facebook', {session: false}), (req, res, next) => {
   let user = req.user.toObject();
   user = _.omit(user, ['createdAt', 'updatedAt', 'role']);
 

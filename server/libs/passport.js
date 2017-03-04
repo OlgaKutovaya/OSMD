@@ -8,9 +8,11 @@ const
   JwtStrategy = require('passport-jwt').Strategy,
   ExtractJwt = require('passport-jwt').ExtractJwt,
   GoogleStrategy = require('passport-google-oauth20').Strategy,
+  FacebookStrategy = require('passport-facebook').Strategy,
   config = require('../config/config'),
   User = require('../models/user'),
-  googleAuthOtions = config.passport.googleAuthOptions;
+  googleAuthOtions = config.passport.googleAuthOptions,
+  facebookAuthOtions = config.passport.facebookAuthOptions;
 
 /**
  * JWT config
@@ -49,19 +51,20 @@ passport.use(new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
   }, (email, password, done) => {
-    User.findUserByEmail(email)
-      .select('-password')
+    User.findUserByQuery({email})
+      .select('+password')
+      .lean()
       .then(user => {
         if (!user) {
-          return done(null, false, {message: 'Invalid username'});
+          return done(null, false, {message: 'User not found'});
         }
-        User.checkPassword(password, user.password)
+        User.checkPassword(password, user.local.password)
           .then(isMatch => {
             if (!isMatch) {
               return done(null, false, {message: 'Invalid password'});
             }
             return done(null, user);
-          });
+          }).catch(err => done(err));
       })
       .catch(err => done(err));
   }
@@ -97,11 +100,33 @@ passport.use(new GoogleStrategy(
   (accessToken, refreshToken, profile, cb) => {
     User.findOrCreate(
       {
-        googleId: profile.id
+        'google.id': profile.id
       },
       {
-        username: profile.displayName,
-        email: profile.emails[0].value
+        'google.token': accessToken,
+        'google.name': profile.displayName,
+        'google.email': profile.emails[0].value
+      },
+      (err, user) => cb(err, user));
+  })
+);
+
+passport.use(new FacebookStrategy(
+  {
+    clientID: facebookAuthOtions.clientID,
+    clientSecret: facebookAuthOtions.clientSecret,
+    callbackURL: facebookAuthOtions.callbackURL
+  },
+  (accessToken, refreshToken, profile, cb) => {
+    console.log(profile);
+    User.findOrCreate(
+      {
+        'facebook.id': profile.id
+      },
+      {
+        'facebook.token': accessToken,
+        'facebook.name': profile.displayName,
+        // 'facebook.email': profile.emails[0].value
       },
       (err, user) => cb(err, user));
   })
