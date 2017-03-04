@@ -17,11 +17,13 @@ const config = {
     }
   },
   passport: {
-    googleOptions: {
+    googleAuthOptions: {
       clientID: '441428006509-34qjiv949e9f9h5bmbueuleqchjvto6m.apps.googleusercontent.com',
       clientSecret: 'zgyIIPOkxtrgUGObwkt94Bc_',
       callbackURL: 'http://127.0.0.1:3000/api/v1/users/login/google/callback'
-    }
+    },
+    facebookAuthOptions: {},
+    twitterAuthOptions: {}
   },
   jwt: {
     secret: 'H1teNDQcxrkxKl4vmql',

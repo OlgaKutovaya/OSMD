@@ -19,7 +19,6 @@ router.route('/')
       .lean()
       .then(products =>
         res.json({
-          success: true,
           products: products
         }))
       .catch(err => next(err));

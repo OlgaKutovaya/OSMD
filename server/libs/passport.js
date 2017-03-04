@@ -9,7 +9,8 @@ const
   ExtractJwt = require('passport-jwt').ExtractJwt,
   GoogleStrategy = require('passport-google-oauth20').Strategy,
   config = require('../config/config'),
-  User = require('../models/user');
+  User = require('../models/user'),
+  googleAuthOtions = config.passport.googleAuthOptions;
 
 /**
  * JWT config
@@ -76,7 +77,7 @@ passport.use(new JwtStrategy(passportJwtConfig, (jwt_payload, done) => {
     .lean()
     .then(user => {
       if (!user) {
-        return done(null, false);
+        return done(null, false, {message: 'User not found'});
       }
       return done(null, user);
     })
@@ -88,7 +89,11 @@ passport.use(new JwtStrategy(passportJwtConfig, (jwt_payload, done) => {
  */
 
 passport.use(new GoogleStrategy(
-  config.passport.googleOptions,
+  {
+    clientID: googleAuthOtions.clientID,
+    clientSecret: googleAuthOtions.clientSecret,
+    callbackURL: googleAuthOtions.callbackURL
+  },
   (accessToken, refreshToken, profile, cb) => {
     User.findOrCreate(
       {

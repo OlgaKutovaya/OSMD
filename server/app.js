@@ -16,7 +16,7 @@ const
   cors = require('cors'),
   mongoose = require('./libs/mongoose'),
   MongoStore = require('connect-mongo')(session),
-  errors = require('./utils/errors'),
+  {HttpError, MongooseError} = require('./utils/errors'),
   port = config.server.port;
 
 /**
@@ -93,7 +93,6 @@ app.use(config.server.apiRoute, cors(), apiRoutes);
  */
 
 app.use((req, res, next) => {
-  const HttpError = errors.HttpError;
   next(new HttpError(404));
 });
 
@@ -106,7 +105,7 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  if (err instanceof errors.MongooseError && err.name === 'ValidationError') {
+  if (err instanceof MongooseError && err.name === 'ValidationError') {
     err.status = 400;
   }
   if (err.name === 'MongoError' && err.code === 11000) {

@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
     price: {
       type: Number,
       default: 0,
-      min: [0, 'Price must be posititve value']
+      min: [0, 'Price must be positive value']
     }
   },
   {timestamps: true}

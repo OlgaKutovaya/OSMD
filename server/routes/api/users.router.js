@@ -113,7 +113,6 @@ router.post('/login', (req, res, next) => {
                 return next(err);
               }
               return res.json({
-                success: true,
                 jwt: token,
                 user
               });
@@ -166,10 +165,9 @@ router.post('/confirm', (req, res, next) => {
  */
 
 router.get('/profile', passportJwtAuth, (req, res) => {
-  const user = Object.assign({}, req.user);
-  delete user.role;
+  const user = _.assign({}, req.user);
   res.json({
-    profile: user
+    profile: _.omit(user, ['role', 'createdAt', 'updatedAt'])
   });
 });
 
