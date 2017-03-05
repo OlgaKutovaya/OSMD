@@ -40,3 +40,7 @@ exports.registerValidator = (body) => {
   }
   return errors;
 };
+
+exports.objectIdValidator = (id) => {
+  return validator.isMongoId(id);
+};

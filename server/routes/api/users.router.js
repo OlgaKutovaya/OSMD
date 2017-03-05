@@ -5,15 +5,18 @@
 const
   router = require('express').Router(),
   User = require('../../models/user'),
+  Confirm = require('../../models/confirm-email'),
   config = require('../../config/config'),
+  path = require('path'),
   jwt = require('jsonwebtoken'),
   passportJwtAuth = require('../../middleware/passport-jwt-auth'),
   passport = require('../../libs/passport'),
   checkAdmin = require('../../middleware/checkAdmin'),
-  // mailer = require('../../libs/mailer'),
+  pug = require('pug'),
+  mailer = require('../../libs/mailer'),
   checkMongoId = require('../../middleware/check-mongoId'),
-  resMsg = require('../../utils/res-msg'),
-  {registerValidator} = require('../../utils/validation-utils'),
+  {notFound} = require('../../utils/res-msg'),
+  {registerValidator, objectIdValidator} = require('../../utils/validation-utils'),
   _ = require('lodash');
 
 /**
@@ -62,7 +65,7 @@ router.post('/register', (req, res, next) => {
         res.json({
           message: 'You have successfully registered'
         });
-      }).catch(err => next(err));
+      });
     }).catch(err => next(err));
 
 });
@@ -165,18 +168,88 @@ router.get('/login/facebook/callback', passport.authenticate('facebook', {sessio
 /**
  *Confirm Email
  */
-router.post('/confirm', (req, res, next) => {
-  //confirm?userId&redirectUrl&token
-  /*mailer.sendMail(config.mailer.mailOptions, (err, info) => {
-   if (err) {
-   return next(err);
-   }
-   console.log(info);
-   res.json({
-   success: true,
-   info
-   });
-   });*/
+router.post('/send', passportJwtAuth, (req, res, next) => {
+  //confirm?userId&token
+  const {email, confirmed, username}=req.user.local;
+  if (confirmed) {
+    return res.json({
+      message: 'Email has already verificated'
+    });
+  }
+  if (email) {
+    Confirm.createConfirm(req.user._id)
+      .then(confirm => {
+        const query = [
+          `id=${confirm.userId}`,
+          `confirmToken=${confirm.confirmToken}`].join('&');
+
+        const url = `${config.server.host}:${config.server.port}${config.server.apiRoute}/users/confirm?${query}`;
+        //TODO:Send Email
+        let mailOptions = config.mailer.mailOptions;
+        mailOptions.html = pug.renderFile(path.join(req.app.get('views'), 'confirm-email.pug'), {
+          url,
+          email,
+          username,
+          cache: true
+        });
+        mailOptions.to = 'vetalpro.exe@gmail.com';
+        mailer.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            throw err;
+          }
+          return res.json({
+            confirm: confirm,
+            url: url,
+            info: info
+          });
+        });
+
+      })
+      .catch(err => next(err));
+  } else {
+    res.status(400).json({
+      error: {
+        message: 'Local email is empty'
+      }
+    });
+  }
+
+
+});
+
+router.get('/confirm', (req, res, next) => {
+  const query = req.query;
+  if (!query.id || !query.confirmToken || !objectIdValidator(query.id)) {
+    return res.status(400).json({
+      error: {
+        message: 'Bad Request'
+      }
+    });
+  }
+  Confirm.findConfirm(query.id, query.confirmToken)
+    .then(confirm => {
+      if (!confirm) {
+        return res.status(400).json({
+          error: {
+            message: 'Token TTL expired. Please resend verification email again'
+          }
+        });
+      }
+      User.findUserById(confirm.userId)
+        .then(user => {
+          if (!user) {
+            return notFound(res, 'User not found');
+          }
+          user.local.confirmed = true;
+          user.save().then(user => {
+            return Confirm.removeConfirm(user._id, query.confirmToken);
+          }).then(() => {
+            res.json({
+              message: 'You verificate your email'
+            });
+          });
+        }).catch(err => next(err));
+    });
 });
 
 /**
@@ -219,7 +292,7 @@ router.get('/:id', checkMongoId, (req, res, next) => {
     .lean()
     .then(user => {
       if (!user) {
-        return resMsg.notFound(res, 'User not found');
+        return notFound(res, 'User not found');
       }
       res.json({
         success: true,

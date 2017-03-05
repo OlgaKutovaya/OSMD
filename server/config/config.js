@@ -6,7 +6,8 @@ const config = {
   server: {
     host: 'http://127.0.0.1',
     port: process.env.PORT || 3000,
-    apiRoute: '/api/v1'
+    apiRoute: '/api/v1',
+    a: this
   },
   mongoose: {
     local: {
@@ -25,7 +26,7 @@ const config = {
     facebookAuthOptions: {
       clientID: '393451751013103',
       clientSecret: 'cd441f83eb3c78a7cc2068ca3e6429ef',
-      callbackURL: 'http://localhost:3000/api/v1/users/login/facebook/callback'
+      callbackURL: 'http://127.0.0.1:3000/api/v1/users/login/facebook/callback'
     },
     twitterAuthOptions: {}
   },
@@ -57,16 +58,16 @@ const config = {
     yandex: {
       service: 'Yandex',
       auth: {
-        user: '**',
-        pass: '*'
+        user: '',
+        pass: ''
       }
     },
     mailOptions: {
-      from: 'osmd <vetalpro.exe@yandex.ua>',
+      from: 'OSMD <vetalpro.exe@yandex.ua>',
       to: 'vetalpro.exe@gmail.com',
-      subject: 'test',
-      text: 'plain text',
-      html: '<b>html text</b>'
+      subject: 'Email Verification',
+      text: 'Email Activate link',
+      html: '<b>Email Activate link</b>'
     }
   },
   helmet: {
