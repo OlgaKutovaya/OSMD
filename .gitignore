@@ -1,5 +1,0 @@
-.idea/
-node_modules/
-npm-debug.log*
-*.log
-config.secret.js
