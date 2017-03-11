@@ -22,7 +22,65 @@ const
 /**
  *GET all users
  */
+/**
+ @api {get} /users GET All Users
+ @apiVersion 0.1.0
+ @apiName GetAllUsers
+ @apiGroup User
+ @apiHeader {String} Authorization Users unique JWT.
+ @apiHeaderExample {json} Header-Example:
+ {
+   "Authorization": "JWT {token long string}"
+ }
 
+ @apiSuccess {Array} users Array of Users.
+
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "users": [
+    {
+      "_id": "58bae8b1082f5e2728bab169",
+      "updatedAt": "2017-03-04T16:17:53.238Z",
+      "createdAt": "2017-03-04T16:17:53.238Z",
+      "local": {
+        "email": "admin@gmail.com",
+        "username": "admin",
+        "confirmed": false
+      },
+
+    },
+    {
+      "_id": "58bae8b1082f5e2728bab168",
+      "updatedAt": "2017-03-04T22:59:34.537Z",
+      "createdAt": "2017-03-04T16:17:53.226Z",
+      "local": {
+        "email": "test2@gmail.com",
+        "username": "name2",
+        "confirmed": true
+      },
+      "google": {
+        "id": "23423423423",
+        "token": "sadkaskdjk4h5j34hj5j6h54j6j45",
+        "name": "Vasya Ivanov",
+        "email": "vasya.exe@gmail.com"
+      }
+    }
+
+ }
+
+ @apiError {Object} error Error Object.
+ @apiError {String} error.message message of the error.
+
+ @apiErrorExample Error-Response:
+ HTTP/1.1 404 Not Found
+ {
+   "error": {
+      "message": "User not found"
+    }
+ }
+
+ */
 router.get('/', (req, res, next) => {
   User.find()
     .lean()
@@ -35,9 +93,61 @@ router.get('/', (req, res, next) => {
 });
 
 /**
- *Registration route
- */
+ @api {post} /users/register Registration
+ @apiVersion 0.1.0
+ @apiName UserRegister
+ @apiGroup User
 
+ @apiParam {String} email Email.
+ @apiParam {String} password Password.
+ @apiParam {String} username Full Username.
+
+ @apiParamExample {json} Request-Example:
+ {
+   "email": "user@gmail.com",
+   "password": "123456",
+   "username": "user"
+ }
+
+ @apiSuccess {Object} local Local Strategy.
+ @apiSuccess {String} local.email email of the User.
+
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "message": "You have successfully registered"
+ }
+
+ @apiError {Object} error Error Object.
+ @apiError {Array} error.errors Array of errors.
+ @apiError {String} error.message Error message.
+
+ @apiErrorExample Validation Error:
+ HTTP/1.1 400 Bad Request
+ {
+   "error": {
+      "errors": [
+        {
+          "username": "Username must be filled"
+        },
+        {
+          "email": "Email must be filled"
+        },
+        {
+          "password": "Password must be filled"
+        }
+      ]
+    }
+ }
+ @apiErrorExample Email Error:
+ HTTP/1.1 403 Forbidden
+ {
+   "error": {
+      "message": "Email user@gmail.com is already registered"
+    }
+ }
+
+ */
 router.post('/register', (req, res, next) => {
   const errors = registerValidator(req.body);
   if (errors.length) {
@@ -50,7 +160,7 @@ router.post('/register', (req, res, next) => {
   User.findUserByQuery({email: req.body.email})
     .then(user => {
       if (user) {
-        return res.status(400).json({
+        return res.status(403).json({
           error: {
             message: `Email ${user.email} is already registered`
           }
@@ -71,8 +181,62 @@ router.post('/register', (req, res, next) => {
 });
 
 /**
- *
- *Login route (give token to user)
+ @api {post} /users/login Login
+ @apiVersion 0.1.0
+ @apiName UserLogin
+ @apiGroup User
+
+ @apiParam {String} email Email.
+ @apiParam {String} password Password.
+
+ @apiParamExample {json} Request-Example:
+ {
+   "email": "user@gmail.com",
+   "password": "123456"
+ }
+
+ @apiSuccess {String} jwt JWT token.
+ @apiSuccess {Object} user User Object.
+ @apiSuccess {String} user.email Email of the user.
+ @apiSuccess {String} user.username Username of the user.
+
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "jwt": "jwt token",
+   "user": {
+      "username": "user",
+      "email": "user@gmail.com"
+   }
+ }
+
+ @apiError {Object} error Error Object.
+ @apiError {String} error.message Error message.
+
+ @apiErrorExample Validation Error:
+ HTTP/1.1 400 Bad Request
+ {
+   "error": {
+      "message": "Email or Password is empty"
+    }
+ }
+
+ @apiErrorExample Not Found Error:
+ HTTP/1.1 404 Not Found
+ {
+   "error": {
+      "message": "User not found"
+    }
+ }
+
+ @apiErrorExample Invalid Password Error:
+ HTTP/1.1 403 Forbidden
+ {
+   "error": {
+      "message": "Invalid password"
+    }
+ }
+
  */
 
 router.post('/login', (req, res, next) => {
@@ -126,9 +290,30 @@ router.post('/login', (req, res, next) => {
 );
 
 /**
- * GET Google OAuth2
- */
+ @api {get} /users/login/google Google OAuth
+ @apiVersion 0.1.0
+ @apiName UserGoogleOAuth
+ @apiGroup User
 
+ @apiSuccess {String} jwt JWT token.
+ @apiSuccess {Object} user User Object.
+ @apiSuccess {String} user.email Email of the user.
+ @apiSuccess {String} user.username Username of the user.
+
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "jwt": "jwt token",
+   "user": {
+      "google":{
+        "name": "user",
+        "email": "user@gmail.com"
+      }
+
+   }
+ }
+
+ */
 router.get('/login/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 router.get('/login/google/callback', passport.authenticate('google', {session: false}), (req, res, next) => {
   let user = req.user.toObject();
@@ -168,12 +353,57 @@ router.get('/login/facebook/callback', passport.authenticate('facebook', {sessio
 /**
  *Confirm Email
  */
+/**
+ @api {post} /users/send Email Confirm
+ @apiVersion 0.1.0
+ @apiName UserEmailConfirm
+ @apiGroup User
+
+ @apiHeader {String} Authorization Users unique JWT.
+ @apiHeaderExample {json} Header-Example:
+ {
+   "Authorization": "JWT {token long string}"
+ }
+
+ @apiSuccess {String} jwt JWT token.
+ @apiSuccess {Object} user User Object.
+ @apiSuccess {String} user.email Email of the user.
+ @apiSuccess {String} user.username Username of the user.
+
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "confirm":{
+   },
+   "url":"url",
+   "info":"info"
+ }
+
+ @apiError {Object} error Error Object.
+ @apiError {String} error.message Error message.
+
+ @apiErrorExample AlreadyConfirm Error:
+ HTTP/1.1 403 Bad Request
+ {
+   "error": {
+      "message": "Email user@gmail.com has already verificated"
+    }
+ }
+
+ @apiErrorExample LocalEmailError:
+ HTTP/1.1 400 Bad Request
+ {
+   "error": {
+      "message": "Local email is empty"
+    }
+ }
+
+ */
 router.post('/send', passportJwtAuth, (req, res, next) => {
-  //confirm?userId&token
   const {email, confirmed, username}=req.user.local;
   if (confirmed) {
-    return res.json({
-      message: 'Email has already verificated'
+    return res.status(403).json({
+      message: `Email ${email} has already verificated`
     });
   }
   if (email) {
@@ -255,6 +485,40 @@ router.get('/confirm', (req, res, next) => {
 /**
  *Profile route for auth users
  */
+/**
+ @api {get} /users/profile Profile
+ @apiVersion 0.1.0
+ @apiName UserProfile
+ @apiGroup User
+
+ @apiHeader {String} Authorization Users unique JWT.
+ @apiHeaderExample {json} Header-Example:
+ {
+   "Authorization": "JWT {token long string}"
+ }
+
+ @apiSuccess {Object} profile User profile Object.
+
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "profile":{
+      "username": "user",
+      "email": "user@gmail.com"
+   }
+ }
+
+ @apiError {Object} error Error Object.
+ @apiError {String} error.message Error message.
+
+ @apiErrorExample Error:
+ HTTP/1.1 401 Unauthorized
+ {
+   "error": {
+      "message": "Unauthorized"
+    }
+ }
+ */
 
 router.get('/profile', passportJwtAuth, (req, res) => {
   const user = _.assign({}, req.user);
@@ -283,9 +547,48 @@ router.get('/logout', (req, res) => {
 });
 
 /**
- * GET User by ID with check valid mongoID middleware
- */
+ @api {get} /users/:id GET User by ID
+ @apiVersion 0.1.0
+ @apiName GetUser
+ @apiGroup User
+ @apiHeader {String} Authorization Users unique JWT.
+ @apiHeaderExample {json} Header-Example:
+ {
+   "Authorization": "JWT {token long string}"
+ }
+ @apiParam {Number} id Users unique ID.
+ @apiSuccess {Object} local Local Strategy.
+ @apiSuccess {String} local.email email of the User.
+ @apiSuccess {String} local.username name of the User.
+ @apiSuccess {Object} google Google OAuth Strategy.
+ @apiSuccess {String} google.email google email of the user.
+ @apiSuccess {String} google.name google name of the user.
+ @apiSuccessExample Success-Response:
+ HTTP/1.1 200 OK
+ {
+   "local": {
+      "email": "name@gmail.com",
+      "username": "name"
+   },
+   "google": {
+      "email": "name@gmail.com",
+      "name": "name"
+   }
 
+ }
+
+ @apiError {Object} error Error Object.
+ @apiError {String} error.message message of the error.
+
+ @apiErrorExample Error-Response:
+ HTTP/1.1 404 Not Found
+ {
+   "error": {
+      "message": "User not found"
+    }
+ }
+
+ */
 router.get('/:id', checkMongoId, (req, res, next) => {
   const userId = req.params.id;
   User.findUserById(userId)

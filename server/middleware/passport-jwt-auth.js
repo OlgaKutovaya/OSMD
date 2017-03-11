@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
     if (!user) {
       return res.status(401).json({
         error: {
-          message: info.message || 'Anauthorize'
+          message: info.message || 'Unauthorized'
         }
       });
     }
