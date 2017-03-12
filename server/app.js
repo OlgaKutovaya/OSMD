@@ -77,6 +77,7 @@ app.use(flash());
  * Static routes
  */
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/apidoc', express.static(path.resolve(__dirname, '../apidoc')));
 
 /**
  * Routes init
