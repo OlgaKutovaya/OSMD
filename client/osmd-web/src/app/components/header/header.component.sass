@@ -1,0 +1,27 @@
+@import "../../style-variables"
+\:host
+  background-color: $haki
+  color: $white
+  padding: 0 10px
+  display: flex
+  flex-flow: row nowrap
+  justify-content: space-between
+  align-items: center
+
+.header-navigation
+  padding: 0
+  display: flex
+  flex-flow: row nowrap
+
+.navigation-link
+  color: $white
+  text-decoration: none
+  padding: 30px 10px
+  margin-right: 20px
+  transition: background-color 0.2s ease
+  &.active
+    background-color: $light-haki
+  &:hover
+    background-color: $light-haki
+  &:last-of-type
+    margin-right: 0

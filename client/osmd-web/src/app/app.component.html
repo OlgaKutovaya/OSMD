@@ -1,4 +1,12 @@
-<h1>
-  {{title}}
-</h1>
-<router-outlet></router-outlet>
+<div class="main-wrapper">
+  <div class="page-content">
+    <app-header [navLinks]="navLinks"></app-header>
+
+    <main class="main ui-g">
+      <app-sidebar class="ui-g-3"></app-sidebar>
+      <div class="ui-g-9 content">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

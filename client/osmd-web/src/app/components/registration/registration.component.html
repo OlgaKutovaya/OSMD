@@ -1,0 +1,60 @@
+<h2 class="form-title">Регистрация</h2>
+<form class="reg-form" [formGroup]="regForm" (ngSubmit)="onRegistration()">
+  <div class="form-group">
+    <label for="reg-name" class="form-label">Имя:</label>
+    <input
+      pInputText
+      id="reg-name"
+      class="form-control"
+      type="text"
+      name="name"
+      [formControl]="name"
+    >
+  </div>
+  <div class="form-group">
+    <label for="reg-email" class="form-label">Email:</label>
+    <input
+      pInputText
+      id="reg-email"
+      class="form-control"
+      type="text"
+      name="email"
+      [formControl]="email"
+    >
+  </div>
+  <div class="form-group">
+    <label for="reg-password" class="form-label">Пароль:</label>
+    <input
+      pInputText
+      id="reg-password"
+      class="form-control"
+      type="password"
+      name="password"
+      [formControl]="password"
+    >
+  </div>
+  <div class="form-group">
+    <label for="reg-password-confirm" class="form-label">Подтвердите пароль:</label>
+    <input
+      pInputText
+      id="reg-password-confirm"
+      class="form-control"
+      type="password"
+      name="passwordConf"
+      [formControl]="passwordConf"
+    >
+  </div>
+  <div class="form-actions">
+    <button
+      pButton
+      class="ui-button-success"
+      type="submit"
+      label="Зарегистрироваться"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Отмена"
+    ></button>
+  </div>
+</form>

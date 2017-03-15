@@ -1,0 +1,9 @@
+<div class="header-logo">Logo</div>
+<nav class="header-navigation">
+  <a *ngFor="let link of navLinks"
+     [routerLink]="[link.url]"
+     [routerLinkActive]="['active']"
+     [routerLinkActiveOptions]="{ exact: true }"
+     class="navigation-link"
+  >{{link.name}}</a>
+</nav>
