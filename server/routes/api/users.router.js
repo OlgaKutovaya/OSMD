@@ -113,7 +113,7 @@ router.get('/', (req, res, next) => {
  @apiSuccess {String} local.email email of the User.
 
  @apiSuccessExample Success-Response:
- HTTP/1.1 200 OK
+ HTTP/1.1 201 OK
  {
    "message": "You have successfully registered"
  }
@@ -148,7 +148,8 @@ router.get('/', (req, res, next) => {
  }
 
  */
-router.post('/register', (req, res, next) => {
+router.post('/registration', (req, res, next) => {
+  console.log(req.body);
   const errors = registerValidator(req.body);
   if (errors.length) {
     return res.status(400).json({
@@ -157,25 +158,28 @@ router.post('/register', (req, res, next) => {
       }
     });
   }
-  User.findUserByQuery({email: req.body.email})
+  User.findUserByQuery({'local.email': req.body.email})
     .then(user => {
       if (user) {
-        return res.status(403).json({
+        res.status(403).json({
           error: {
-            message: `Email ${user.email} is already registered`
+            message: `Email ${user.local.email} is already registered`
           }
         });
+        return null;
       }
-      User.createLocalUser({
+      return User.createLocalUser({
         username: req.body.username,
         email: req.body.email,
         password: req.body.password
-      }).then(user => {
-        // User.confirmEmail(user._id);
-        res.json({
+      });
+    })
+    .then(user => {
+      if (user) {
+        res.status(201).json({
           message: 'You have successfully registered'
         });
-      });
+      }
     }).catch(err => next(err));
 
 });
@@ -240,8 +244,7 @@ router.post('/register', (req, res, next) => {
  */
 
 router.post('/login', (req, res, next) => {
-    const email = req.body.email;
-    const password = req.body.password;
+    const {email, password} = req.body;
     if (!email || !password) {
       return res.status(400).json({
         error: {

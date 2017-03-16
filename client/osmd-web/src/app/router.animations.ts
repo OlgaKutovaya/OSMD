@@ -66,15 +66,15 @@ function slideToTop() {
 
 function multiAnimation() {
   return trigger('routerTransition', [
-    state('void', style({ position: 'absolute', width: '100%' })),
-    state('*', style({ position: 'absolute', width: '100%' })),
+    state('void', style({ position: 'absolute',width:'100%', opacity: 0, padding: '5px' })),
+    state('*', style({ position: 'absolute',width:'100%', opacity: 1, padding: '5px' })),
     transition(':enter', [
-      style({ transform: 'translateX(100%)' }),
-      animate('0.5s ease-in-out', style({ transform: 'translateX(0%)' }))
+      style({ opacity: 0 }),
+      animate('0.3s ease-in-out', style({ opacity: 1 }))
     ]),
     transition(':leave', [
-      style({ transform: 'translateX(0%)' }),
-      animate('0.5s ease-in-out', style({ transform: 'translateX(-100%)' }))
+      style({ opacity: 1 }),
+      animate('0.3s ease-in-out', style({ opacity: 0 }))
     ])
   ]);
 }

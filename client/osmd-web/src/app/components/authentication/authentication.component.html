@@ -1,5 +1,5 @@
 <h2 class="form-title">Вход</h2>
-<form class="reg-form">
+<form class="reg-form" [formGroup]="authForm" (ngSubmit)="onLogin(authForm.value)">
   <div class="form-group">
     <label for="reg-email" class="form-label">Email:</label>
     <input
@@ -7,8 +7,9 @@
       id="reg-email"
       class="form-control"
       type="text"
-      name="email"
+      formControlName="email"
     >
+    <div *ngIf="formErrors.email" class="form-helper">{{formErrors.email}}</div>
   </div>
   <div class="form-group">
     <label for="reg-password" class="form-label">Пароль:</label>
@@ -17,20 +18,21 @@
       id="reg-password"
       class="form-control"
       type="password"
-      name="password"
+      formControlName="password"
     >
   </div>
   <div class="form-actions">
     <button
       pButton
       class="ui-button-success"
-      type="button"
+      type="submit"
       label="Войти"
+      [disabled]="!authForm.valid"
     ></button>
-    <button
+    <a
       pButton
-      type="button"
-      label="Отмена"
-    ></button>
+      label="Перейти к регистрации"
+      [routerLink]="['/registration']"
+    ></a>
   </div>
 </form>

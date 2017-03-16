@@ -2,32 +2,31 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, navigatableComponents } from './app-routing.module';
 import {
   AccordionModule,
   DialogModule,
   InputTextModule,
   ButtonModule,
-  PasswordModule
+  MessagesModule
 } from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { RegistrationComponent } from './components/registration/registration.component';
-import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { apiUrl } from './config';
+import { UserService } from './services/user.service';
+import { MessageComponent } from './components/message/message.component';
+import { MessageService } from 'app/services/message.service';
+import { GrowlModule } from 'primeng/components/growl/growl';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    PageNotFoundComponent,
+    ...navigatableComponents,
     HeaderComponent,
     SidebarComponent,
-    RegistrationComponent,
-    AuthenticationComponent
+    MessageComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,9 +38,13 @@ import { AuthenticationComponent } from './components/authentication/authenticat
     DialogModule,
     InputTextModule,
     ButtonModule,
-    PasswordModule
+    GrowlModule
   ],
-  providers: [],
+  providers: [
+    UserService,
+    MessageService,
+    { provide: apiUrl, useValue: 'http://127.0.0.1:3000/api/v1' }
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {

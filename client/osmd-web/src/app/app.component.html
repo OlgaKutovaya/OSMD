@@ -1,10 +1,11 @@
 <div class="main-wrapper">
   <div class="page-content">
-    <app-header [navLinks]="navLinks"></app-header>
+    <app-header [navLinks]="navLinks" [currentUser]="currentUser"></app-header>
 
-    <main class="main ui-g">
-      <app-sidebar class="ui-g-3"></app-sidebar>
-      <div class="ui-g-9 content">
+    <main class="main">
+      <app-message></app-message>
+      <app-sidebar class="sidebar"></app-sidebar>
+      <div class="render-content">
         <router-outlet></router-outlet>
       </div>
     </main>

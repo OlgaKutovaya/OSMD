@@ -5,6 +5,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { RegistrationComponent } from './components/registration/registration.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 
+
 const routes: Routes = [
   {
     path: '',
@@ -23,6 +24,13 @@ const routes: Routes = [
     path: '**',
     component: PageNotFoundComponent
   }
+];
+
+export const navigatableComponents = [
+  HomeComponent,
+  AuthenticationComponent,
+  RegistrationComponent,
+  PageNotFoundComponent
 ];
 
 @NgModule({

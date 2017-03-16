@@ -6,4 +6,9 @@
      [routerLinkActiveOptions]="{ exact: true }"
      class="navigation-link"
   >{{link.name}}</a>
+  <a href="//logout"
+     *ngIf="currentUser"
+     class="navigation-link"
+     (click)="onLogout();$event.preventDefault()"
+  >Выйти</a>
 </nav>

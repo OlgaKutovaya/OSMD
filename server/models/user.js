@@ -85,9 +85,9 @@ userSchema.statics.createLocalUser = (user) => {
         email: user.email,
         password: user.password,
         username: user.username
-      },
-      role: user.role
+      }
     };
+    console.log(newUser);
     return User.create(newUser);
   });
 };

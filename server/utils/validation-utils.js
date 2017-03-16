@@ -3,40 +3,31 @@ const validator = require('validator');
 exports.registerValidator = (body) => {
   let errors = [];
 
-  const {username, email, password} = body;
+  const {username, email, password, passwordConf} = body;
 
   if (username) {
     if (!validator.isLength(username, {min: 3})) {
-      errors.push({
-        username: 'Username must be more than 2 characters'
-      });
+      errors.push('Username must be more than 2 characters');
     }
   } else {
-    errors.push({
-      username: 'Username must be filled'
-    });
+    errors.push('Username is empty');
   }
   if (email) {
     if (!validator.isEmail(email)) {
-      errors.push({
-        email: 'Email is invalid'
-      });
+      errors.push('Email is invalid');
     }
   } else {
-    errors.push({
-      email: 'Email must be filled'
-    });
+    errors.push('Email is empty');
   }
   if (password) {
     if (!validator.isLength(password, {min: 6})) {
-      errors.push({
-        password: 'Password must be more than 5 characters'
-      });
+      errors.push('Password must be more than 5 characters');
+    }
+    if (password !== passwordConf) {
+      errors.push('Passwords isn\'t match');
     }
   } else {
-    errors.push({
-      password: 'Password must be filled'
-    });
+    errors.push('Password is empty');
   }
   return errors;
 };

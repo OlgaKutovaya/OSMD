@@ -1,15 +1,15 @@
 <h2 class="form-title">Регистрация</h2>
-<form class="reg-form" [formGroup]="regForm" (ngSubmit)="onRegistration()">
+<form class="reg-form" [formGroup]="regForm" (ngSubmit)="onRegistration(regForm.value)" novalidate>
   <div class="form-group">
-    <label for="reg-name" class="form-label">Имя:</label>
+    <label for="reg-username" class="form-label">Имя:</label>
     <input
       pInputText
-      id="reg-name"
+      id="reg-username"
       class="form-control"
       type="text"
-      name="name"
-      [formControl]="name"
+      formControlName="username"
     >
+    <div *ngIf="formErrors.username" class="form-helper">{{formErrors.username}}</div>
   </div>
   <div class="form-group">
     <label for="reg-email" class="form-label">Email:</label>
@@ -18,9 +18,9 @@
       id="reg-email"
       class="form-control"
       type="text"
-      name="email"
-      [formControl]="email"
+      formControlName="email"
     >
+    <div *ngIf="formErrors.email" class="form-helper">{{formErrors.email}}</div>
   </div>
   <div class="form-group">
     <label for="reg-password" class="form-label">Пароль:</label>
@@ -29,9 +29,9 @@
       id="reg-password"
       class="form-control"
       type="password"
-      name="password"
-      [formControl]="password"
+      formControlName="password"
     >
+    <div *ngIf="formErrors.password" class="form-helper">{{formErrors.password}}</div>
   </div>
   <div class="form-group">
     <label for="reg-password-confirm" class="form-label">Подтвердите пароль:</label>
@@ -40,9 +40,9 @@
       id="reg-password-confirm"
       class="form-control"
       type="password"
-      name="passwordConf"
-      [formControl]="passwordConf"
+      formControlName="passwordConf"
     >
+    <div *ngIf="formErrors.passwordConf" class="form-helper">{{formErrors.passwordConf}}</div>
   </div>
   <div class="form-actions">
     <button
@@ -50,11 +50,7 @@
       class="ui-button-success"
       type="submit"
       label="Зарегистрироваться"
-    ></button>
-    <button
-      pButton
-      type="button"
-      label="Отмена"
+      [disabled]="!regForm.valid"
     ></button>
   </div>
 </form>

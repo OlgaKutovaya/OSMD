@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { routerTransition } from '../../router.animations';
-import { FormGroup, AbstractControl, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { User } from 'app/shared/user/user';
+import { MessageService } from 'app/services/message.service';
+import { ValidationService, emailValidator, matchingPassword } from 'app/services/validation.service';
 
 
 @Component({
@@ -8,55 +13,106 @@ import { FormGroup, AbstractControl, FormBuilder, Validators, FormControl } from
   templateUrl: './registration.component.html',
   styleUrls: [ './registration.component.sass' ],
   animations: [ routerTransition() ],
+  providers: [ ValidationService ],
   host: { '[@routerTransition]': '' }
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent {
   regForm: FormGroup;
-  name: AbstractControl;
-  email: AbstractControl;
-  password: AbstractControl;
-  passwordConf: AbstractControl;
+  formErrors: any = {
+    'username': '',
+    'email': '',
+    'password': '',
+    'passwordConf': ''
+  };
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private router: Router,
+              private userService: UserService,
+              private messageService: MessageService,
+              private validationService: ValidationService) {
+    this.createForm();
+
+  }
+
+  createForm() {
     this.regForm = this.formBuilder.group({
-      'name': [ '', Validators.compose([
-        Validators.required
+      'username': [ '', Validators.compose([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(30)
       ]) ],
       'email': [ '', Validators.compose([
-        Validators.required
+        Validators.required,
+        emailValidator
       ]) ],
       'password': [ '', Validators.compose([
-        Validators.required
+        Validators.required,
+        Validators.minLength(6)
       ]) ],
       'passwordConf': [ '', Validators.compose([
         Validators.required
       ]) ]
-    });
-    this.name = this.regForm.controls[ 'name' ];
-    this.email = this.regForm.controls[ 'email' ];
-    this.password = this.regForm.controls[ 'password' ];
-    this.passwordConf = this.regForm.controls[ 'passwordConf' ];
+    }, { validator: matchingPassword('password', 'passwordConf') });
+
+    this.regForm.valueChanges
+      .subscribe(() => this.formErrors = this.validationService.validate(this.regForm, this.validationMessages, this.formErrors));
+    /*this.formErrors = this.validationService.validate(this.regForm, this.validationMessages, this.formErrors);*/
+
   }
 
-  ngOnInit() {
+  onRegistration(values): void {
+    let user = new User();
+    user.username = values.username.trim();
+    user.email = values.email.trim();
+    user.password = values.password.trim();
+    user.passwordConf = values.passwordConf.trim();
+
+    this.userService.registration(user)
+      .subscribe(
+        (res) => {
+          this.messageService.success('Регистрация выполнена.');
+          this.messageService.success('Можете войти.', true);
+          this.router.navigate([ '/login' ]);
+        },
+        (err) => {
+          if (err.error) {
+            if (err.error.message) {
+              this.messageService.error(err.error.message);
+            }
+            if (err.error.errors) {
+              err.error.errors.forEach((err) => {
+                this.messageService.error(err);
+              })
+            }
+          } else {
+            if (typeof err === 'string') {
+              this.messageService.error(err);
+            }
+          }
+        }
+      );
   }
 
-  onRegistration(): void {
-    console.log(this.regForm.value);
-  }
-
-}
-
-function sku123Validator(control: FormControl): { [s: string]: boolean } {
-  try {
-    if (!control.value.match(/^123/)) {
-      return { 'sku123error': true };
+  validationMessages: any = {
+    'username': {
+      'required': 'Введите имя.',
+      'minlength': 'Имя должно быть более 2 символов.',
+      'maxlength': 'Имя должно быть менее 30 симоволов.',
+    },
+    'email': {
+      'required': 'Введите Email.',
+      'invalidEmail': 'Неверный формат Email.'
+    },
+    'password': {
+      'required': 'Введите пароль.',
+      'minlength': 'Пароль должен быть более 6 символов.',
+    },
+    'passwordConf': {
+      'required': 'Подтвердите пароль.',
+      'isNotMatch': 'Пароли не совпадают.'
     }
-  } catch (err) {
-    return { 'sku123error': true };
-  }
-  if (control.value.length < 8) {
-    return { 'sku length error': true };
-  }
+  };
+
 }
+
 
