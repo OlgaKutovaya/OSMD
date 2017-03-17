@@ -4,6 +4,8 @@ import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { ProfileComponent } from 'app/components/profile/profile.component';
+import { AuthGuard } from 'app/guards/auth.guard';
 
 
 const routes: Routes = [
@@ -19,6 +21,11 @@ const routes: Routes = [
   {
     path: 'registration',
     component: RegistrationComponent
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [ AuthGuard ]
   },
   {
     path: '**',

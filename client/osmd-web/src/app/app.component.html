@@ -1,13 +1,15 @@
 <div class="main-wrapper">
   <div class="page-content">
-    <app-header [navLinks]="navLinks" [currentUser]="currentUser"></app-header>
+    <app-header></app-header>
 
     <main class="main">
       <app-message></app-message>
       <app-sidebar class="sidebar"></app-sidebar>
       <div class="render-content">
+        <app-spinner></app-spinner>
         <router-outlet></router-outlet>
       </div>
     </main>
   </div>
 </div>
+<p-confirmDialog key="logout" acceptLabel="Да" rejectLabel="Нет" appendTo="body"></p-confirmDialog>

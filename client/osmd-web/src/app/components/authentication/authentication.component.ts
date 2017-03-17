@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { ValidationService, emailValidator } from 'app/services/validation.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'app/services/message.service';
-import { UserService } from 'app/services/user.service';
+import { MessageService } from '../message/message.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-authentication',
@@ -23,7 +23,7 @@ export class AuthenticationComponent {
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
-              private userService: UserService,
+              private authService: AuthService,
               private messageService: MessageService,
               private validationService: ValidationService) {
     this.createForm();
@@ -44,21 +44,22 @@ export class AuthenticationComponent {
   }
 
   onLogin(values): void {
-    this.userService.login(values.email, values.password)
+    this.authService.login(values.email, values.password)
       .subscribe(
         (res) => {
           if (res.jwt && res.user) {
-            localStorage.setItem('jwt', res.jwt);
-            localStorage.setItem('currentUser', JSON.stringify(res.user));
+            this.authService.storeUserData(res.jwt, res.user);
             this.messageService.success('Вы успешно авторизовались', true);
             this.router.navigate([ '/' ]);
+          } else {
+            console.log(res);
           }
-
-          console.log(res);
         },
         (err) => {
           if (err.error && err.error.message) {
             this.messageService.error(err.error.message);
+          } else {
+            this.messageService.error('Ошибка');
           }
         }
       );

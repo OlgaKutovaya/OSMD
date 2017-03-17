@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
 import { User } from 'app/shared/user/user';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../message/message.service';
 import { ValidationService, emailValidator, matchingPassword } from 'app/services/validation.service';
+import { AuthService } from 'app/services/auth.service';
 
 
 @Component({
@@ -27,7 +27,7 @@ export class RegistrationComponent {
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
-              private userService: UserService,
+              private authService: AuthService,
               private messageService: MessageService,
               private validationService: ValidationService) {
     this.createForm();
@@ -56,7 +56,6 @@ export class RegistrationComponent {
 
     this.regForm.valueChanges
       .subscribe(() => this.formErrors = this.validationService.validate(this.regForm, this.validationMessages, this.formErrors));
-    /*this.formErrors = this.validationService.validate(this.regForm, this.validationMessages, this.formErrors);*/
 
   }
 
@@ -67,7 +66,7 @@ export class RegistrationComponent {
     user.password = values.password.trim();
     user.passwordConf = values.passwordConf.trim();
 
-    this.userService.registration(user)
+    this.authService.registration(user)
       .subscribe(
         (res) => {
           this.messageService.success('Регистрация выполнена.');
@@ -85,9 +84,7 @@ export class RegistrationComponent {
               })
             }
           } else {
-            if (typeof err === 'string') {
-              this.messageService.error(err);
-            }
+            this.messageService.error('Ошибка');
           }
         }
       );

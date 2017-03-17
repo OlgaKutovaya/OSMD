@@ -1,5 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { User } from 'app/shared/user/user';
+import { Component, OnInit } from '@angular/core';
+import { ConfirmationService } from 'primeng/primeng';
+import { MessageService } from '../message/message.service';
+import { Router } from '@angular/router';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -7,17 +10,29 @@ import { User } from 'app/shared/user/user';
   styleUrls: [ './header.component.sass' ]
 })
 export class HeaderComponent implements OnInit {
-  @Input() navLinks: Array<any>;
-  @Input() currentUser: User;
 
-  constructor() {
+  constructor(private authService: AuthService,
+              private confirmationService: ConfirmationService,
+              private messageService: MessageService,
+              private router: Router) {
   }
 
   ngOnInit() {
   }
 
   onLogout() {
-    console.log('logout');
+    this.confirmationService.confirm({
+      message: 'Вы уверены, что хотите выйти?',
+      icon: 'fa fa-question-circle',
+      header: 'Выход',
+      key: 'logout',
+      accept: () => {
+        this.messageService.info('Вы разлогинились.', true);
+        this.authService.logout();
+        this.router.navigate([ '/' ]);
+        console.log('logout');
+      }
+    });
   }
 
 }

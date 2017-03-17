@@ -4,45 +4,31 @@ import { User } from '../shared/user/user';
 import { Observable } from 'rxjs';
 import { apiUrl } from '../config/config';
 import 'rxjs/add/operator/map';
+import { AuthService } from 'app/services/auth.service';
+import { AuthHttp } from 'angular2-jwt';
 
 @Injectable()
 export class UserService {
 
   constructor(@Inject(apiUrl) private apiUrl: string,
-              private http: Http) {
-  }
-
-  registration(user: User): Observable<any> {
-    console.log(user);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers });
-    return this.http.post(`${this.apiUrl}/users/registration`, user, options)
-      .map((res: Response) => res.json())
-      .catch(this.handleError);
-  }
-
-  login(email: string, password: string) {
-    const data = { email, password };
-    console.log(data);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers });
-    return this.http.post(`${this.apiUrl}/users/login`, data, options)
-      .map((res: Response) => res.json())
-      .catch(this.handleError);
-  }
-
-  logout() {
-    localStorage.removeItem('currentUser');
+              private http: Http,
+              private authHttp: AuthHttp,
+              private authService: AuthService) {
   }
 
   getAll(): Observable<any> {
     return this.http.get('', {});
   }
 
+  getProfile(): Observable<any> {
+    return this.authHttp.get(`${this.apiUrl}/users/profile`)
+      .map((res: Response) => res.json())
+      .catch(this.handleError);
+  }
+
   handleError(err: Response): Observable<any> {
     console.log(err);
-
-    return Observable.throw(err.json() || 'Error');
+    return Observable.throw(err.json());
   }
 
 }
