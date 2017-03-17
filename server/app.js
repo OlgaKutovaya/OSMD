@@ -77,13 +77,14 @@ app.use(flash());
  * Static routes
  */
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../client/osmd-web/dist')));
 app.use('/apidoc', express.static(path.resolve(__dirname, '../apidoc')));
 
 /**
  * Routes init
  */
-app.use('/', index);
 app.use(config.server.apiRoute, cors(), apiRoutes);
+app.use('/*', index);
 
 /**
  * Error handlers
@@ -117,7 +118,7 @@ app.use((err, req, res, next) => {
   if (err.status !== 404) {
     console.error(err);
   }
-  if (/^\/api\/v\d/.test(req.url)) {
+  if (/^\/api\/v\d\/(?!users\/confirm)/.test(req.url)) {
     res.json({err});
   } else {
     res.render('error');

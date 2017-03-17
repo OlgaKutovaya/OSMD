@@ -26,6 +26,13 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  sendConfirm(id: string): Observable<any> {
+    return this.authHttp.post(`${this.apiUrl}/users/send`, { _id: id })
+      .map((res: Response) => res.json())
+      .catch(this.handleError);
+  }
+
+
   handleError(err: Response): Observable<any> {
     console.log(err);
     return Observable.throw(err.json());

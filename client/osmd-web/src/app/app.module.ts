@@ -16,7 +16,6 @@ import {
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { apiUrl } from './config';
 import { UserService } from './services/user.service';
 import { MessageComponent } from './components/message/message.component';
 import { AuthService, authHttpServiceFactory } from 'app/services/auth.service';
@@ -26,6 +25,7 @@ import { AuthHttp } from 'angular2-jwt';
 import { SpinnerComponent } from 'app/components/spinner/spinner.component';
 import { SpinnerService } from 'app/components/spinner/spinner.service';
 import { MessageService } from 'app/components/message/message.service';
+import { config, apiUrl } from 'app/config';
 
 @NgModule({
   declarations: [
@@ -62,7 +62,7 @@ import { MessageService } from 'app/components/message/message.service';
       useFactory: authHttpServiceFactory,
       deps: [ Http, RequestOptions ]
     },
-    { provide: apiUrl, useValue: 'http://127.0.0.1:3000/api/v1' }
+    { provide: apiUrl, useValue: config.apiUrl }
   ],
   bootstrap: [ AppComponent ]
 })

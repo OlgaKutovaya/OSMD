@@ -1,6 +1,8 @@
 const
   _ = require('lodash'),
-  configProduction = require('./config.production');
+  configProduction = require('./config.production'),
+  yandexUser = process.env.YANDEX_USER,
+  yandexPassword = process.env.YANDEX_PASSWORD;
 
 const config = {
   server: {
@@ -58,8 +60,8 @@ const config = {
     yandex: {
       service: 'Yandex',
       auth: {
-        user: '',
-        pass: ''
+        user: null || yandexUser,
+        pass: null || yandexPassword
       }
     },
     mailOptions: {

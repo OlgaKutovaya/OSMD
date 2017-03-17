@@ -1,5 +1,23 @@
-<h2 *ngIf="loading">LOADING</h2>
-<p>
-  profile
-</p>
-<p>{{profile|json}}</p>
+<h2>Профиль</h2>
+<div *ngIf="profile">
+  <div *ngIf="profile.local">
+    <p>Имя: {{profile.local.username}}</p>
+    <p>Email: {{profile.local.email}}</p>
+    <p>
+      {{profile.local.confirmed?'Email подтвержден':'Email не подтвержден'}}
+      <button
+        *ngIf="!profile.local.confirmed"
+        pButton
+        label="Подтвердить"
+        (click)="confirm()"
+      ></button>
+    </p>
+
+  </div>
+  <div *ngIf="profile.google">
+    <h4>Google аккаунт</h4>
+    <p>Имя: {{profile.google.name}}</p>
+    <p>Email: {{profile.google.email}}</p>
+  </div>
+</div>
+

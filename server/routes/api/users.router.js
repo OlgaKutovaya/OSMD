@@ -16,6 +16,7 @@ const
   mailer = require('../../libs/mailer'),
   checkMongoId = require('../../middleware/check-mongoId'),
   {notFound} = require('../../utils/res-msg'),
+  {HttpError}=require('../../utils/errors'),
   {registerValidator, objectIdValidator} = require('../../utils/validation-utils'),
   _ = require('lodash');
 
@@ -406,7 +407,9 @@ router.post('/send', passportJwtAuth, (req, res, next) => {
   const {email, confirmed, username}=req.user.local;
   if (confirmed) {
     return res.status(403).json({
-      message: `Email ${email} has already verificated`
+      error: {
+        message: `Email ${email} has already verificated`
+      }
     });
   }
   if (email) {
@@ -425,7 +428,7 @@ router.post('/send', passportJwtAuth, (req, res, next) => {
           username,
           cache: true
         });
-        mailOptions.to = 'vetalpro.exe@gmail.com';
+        mailOptions.to = email;
         mailer.sendMail(mailOptions, (err, info) => {
           if (err) {
             throw err;
@@ -453,33 +456,23 @@ router.post('/send', passportJwtAuth, (req, res, next) => {
 router.get('/confirm', (req, res, next) => {
   const query = req.query;
   if (!query.id || !query.confirmToken || !objectIdValidator(query.id)) {
-    return res.status(400).json({
-      error: {
-        message: 'Bad Request'
-      }
-    });
+    return next(new HttpError(400, 'Bad Request'));
   }
   Confirm.findConfirm(query.id, query.confirmToken)
     .then(confirm => {
       if (!confirm) {
-        return res.status(400).json({
-          error: {
-            message: 'Token TTL expired. Please resend verification email again'
-          }
-        });
+        return next(new HttpError(403, 'Token TTL expired. Please resend verification email again'));
       }
       User.findUserById(confirm.userId)
         .then(user => {
           if (!user) {
-            return notFound(res, 'User not found');
+            return next(new HttpError(404, 'User not found'));
           }
           user.local.confirmed = true;
           user.save().then(user => {
             return Confirm.removeConfirm(user._id, query.confirmToken);
           }).then(() => {
-            res.json({
-              message: 'You verificate your email'
-            });
+            res.redirect('/profile');
           });
         }).catch(err => next(err));
     });

@@ -6,12 +6,7 @@
     [routerLinkActiveOptions]="{ exact: true }"
     class="navigation-link"
   >Домой</a>
-  <a
-    *ngIf="authService.loggedIn()"
-    [routerLink]="['/profile']"
-    [routerLinkActive]="['active']"
-    class="navigation-link"
-  >Профиль</a>
+
   <a
     [routerLink]="['/donate']"
     [routerLinkActive]="['active']"
@@ -29,6 +24,12 @@
     [routerLinkActive]="['active']"
     class="navigation-link"
   >Регистрация</a>
+  <a
+    *ngIf="authService.loggedIn()"
+    [routerLink]="['/profile']"
+    [routerLinkActive]="['active']"
+    class="navigation-link"
+  >Профиль</a>
   <a
     *ngIf="authService.loggedIn()"
     href="/logout"

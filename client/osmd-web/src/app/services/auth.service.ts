@@ -36,6 +36,7 @@ export class AuthService {
       .catch(this.handleError);
   }
 
+
   logout() {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user');
@@ -70,7 +71,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
     tokenName: 'jwt_token',
     globalHeaders: [ { 'Content-Type': 'application/json' } ],
-    headerPrefix: 'JWT '
+    headerPrefix: 'JWT'
   }), http, options);
 }
 
