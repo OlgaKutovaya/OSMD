@@ -6,7 +6,7 @@ const
   app = require('../app'),
   debug = require('debug')('server:www'),
   http = require('http'),
-  config = require('../config/config'),
+  config = require('../config'),
   mongoose = require('../libs/mongoose');
 
 /**
@@ -81,7 +81,7 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log(`Server started on 127.0.0.1:${port}`);
+  console.log(`Server started on http://127.0.0.1:${port}`);
 }
 
 
@@ -92,7 +92,12 @@ mongoose.connection.on('open', (err) => {
   if (err) {
     throw err;
   }
-  console.log(`Mongoose connected to ${config.mongoose.mongolab.host}`);
+  if (config.production) {
+    console.log('PRODUCTION ENV');
+  } else {
+    console.log('DEVELOPMENT ENV');
+  }
+  console.log(`Mongoose connected to ${config.mongoose.host}`);
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening);

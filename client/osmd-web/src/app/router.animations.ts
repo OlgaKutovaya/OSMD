@@ -4,7 +4,7 @@ export function routerTransition() {
   return multiAnimation();
 }
 
-function slideToRight() {
+export function slideToRight() {
   return trigger('routerTransition', [
     state('void', style({ position: 'fixed', width: '100%' })),
     state('*', style({ position: 'fixed', width: '100%' })),
@@ -19,7 +19,7 @@ function slideToRight() {
   ]);
 }
 
-function slideToLeft() {
+export function slideToLeft() {
   return trigger('routerTransition', [
     state('void', style({ position: 'absolute', width: '100%' })),
     state('*', style({ position: 'absolute', width: '100%' })),
@@ -34,7 +34,7 @@ function slideToLeft() {
   ]);
 }
 
-function slideToBottom() {
+export function slideToBottom() {
   return trigger('routerTransition', [
     state('void', style({ position: 'fixed', width: '100%', height: '100%' })),
     state('*', style({ position: 'fixed', width: '100%', height: '100%' })),
@@ -49,7 +49,7 @@ function slideToBottom() {
   ]);
 }
 
-function slideToTop() {
+export function slideToTop() {
   return trigger('routerTransition', [
     state('void', style({ position: 'fixed', width: '100%', height: '100%' })),
     state('*', style({ position: 'fixed', width: '100%', height: '100%' })),
@@ -64,10 +64,10 @@ function slideToTop() {
   ]);
 }
 
-function multiAnimation() {
+export function multiAnimation() {
   return trigger('routerTransition', [
-    state('void', style({ position: 'absolute',width:'100%', opacity: 0, padding: '5px' })),
-    state('*', style({ position: 'absolute',width:'100%', opacity: 1, padding: '5px' })),
+    state('void', style({ position: 'absolute', width: '100%', opacity: 0, padding: '5px' })),
+    state('*', style({ position: 'absolute', width: '100%', opacity: 1, padding: '5px' })),
     transition(':enter', [
       style({ opacity: 0 }),
       animate('0.3s ease-in-out', style({ opacity: 1 }))

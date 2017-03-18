@@ -6,7 +6,7 @@ const
   router = require('express').Router(),
   User = require('../../models/user'),
   Confirm = require('../../models/confirm-email'),
-  config = require('../../config/config'),
+  config = require('../../config'),
   path = require('path'),
   jwt = require('jsonwebtoken'),
   passportJwtAuth = require('../../middleware/passport-jwt-auth'),
@@ -249,7 +249,7 @@ router.post('/login', (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({
         error: {
-          message: 'Email or Password is empty'
+          message: 'Пустой email или пароль.'
         }
       });
     }
@@ -262,7 +262,7 @@ router.post('/login', (req, res, next) => {
         if (!user) {
           return res.status(404).json({
             error: {
-              message: 'User not found'
+              message: 'Пользователь не найден.'
             }
           });
         }
@@ -419,8 +419,8 @@ router.post('/send', passportJwtAuth, (req, res, next) => {
           `id=${confirm.userId}`,
           `confirmToken=${confirm.confirmToken}`].join('&');
 
-        const url = `${config.server.host}:${config.server.port}${config.server.apiRoute}/users/confirm?${query}`;
-        //TODO:Send Email
+        const url = `${config.server.callbackUrl + config.server.apiRoute}/users/confirm?${query}`;
+
         let mailOptions = config.mailer.mailOptions;
         mailOptions.html = pug.renderFile(path.join(req.app.get('views'), 'confirm-email.pug'), {
           url,
@@ -461,21 +461,25 @@ router.get('/confirm', (req, res, next) => {
   Confirm.findConfirm(query.id, query.confirmToken)
     .then(confirm => {
       if (!confirm) {
-        return next(new HttpError(403, 'Token TTL expired. Please resend verification email again'));
+        throw new HttpError(403, 'Время токена истекло, либо Вы уже подтвердили свой email.');
       }
-      User.findUserById(confirm.userId)
-        .then(user => {
-          if (!user) {
-            return next(new HttpError(404, 'User not found'));
-          }
-          user.local.confirmed = true;
-          user.save().then(user => {
-            return Confirm.removeConfirm(user._id, query.confirmToken);
-          }).then(() => {
-            res.redirect('/profile');
-          });
-        }).catch(err => next(err));
-    });
+      return User.findUserById(confirm.userId);
+
+    })
+    .then(user => {
+      if (!user) {
+        throw new HttpError(404, 'Пользователь не найден.');
+      }
+      user.local.confirmed = true;
+      return user.save();
+    })
+    .then(user => {
+      return Confirm.removeConfirm(user._id, query.confirmToken);
+    })
+    .then(() => {
+      res.redirect(`${config.server.clientUrl}/profile`);
+    })
+    .catch(err => next(err));
 });
 
 /**

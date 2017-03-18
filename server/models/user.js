@@ -119,11 +119,6 @@ userSchema.statics.findUserByQuery = (query) => {
 };
 
 
-/*userSchema.statics.confirmEmail = (userId) => {
- const newConfirm = new Confirm({userId});
- console.log(newConfirm);
- };*/
-
 /**
  * Init User model
  */

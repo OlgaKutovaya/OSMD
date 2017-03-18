@@ -9,7 +9,7 @@ const
   ExtractJwt = require('passport-jwt').ExtractJwt,
   GoogleStrategy = require('passport-google-oauth20').Strategy,
   FacebookStrategy = require('passport-facebook').Strategy,
-  config = require('../config/config'),
+  config = require('../config'),
   User = require('../models/user'),
   googleAuthOtions = config.passport.googleAuthOptions,
   facebookAuthOtions = config.passport.facebookAuthOptions;

@@ -1,5 +1,7 @@
-.container
-    h3 Hello #{username}
-    p Please click a link below to confirm your email adress
-    p email #{email}
-    a(href=url)=url
+div
+    h3 Здравствуйте #{username}.
+        p Пожалуйста нажмите ссылку ниже, чтобы подтвердить ваш почтовый ящик.
+        p(style='text-align:left;')
+            a.confirm-link(href=url style='display:inline-block;color: #ffffff;padding: 10px 20px;background-color: #125eff;border-radius: 5px;text-decoration:none;') Подтвердить
+        p
+            a(href=url)=url

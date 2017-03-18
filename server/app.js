@@ -7,7 +7,7 @@ const
   // favicon = require('serve-favicon'),
   logger = require('morgan'),
   bodyParser = require('body-parser'),
-  config = require('./config/config'),
+  config = require('./config'),
   session = require('express-session'),
   passport = require('./libs/passport'),
   flash = require('connect-flash'),
