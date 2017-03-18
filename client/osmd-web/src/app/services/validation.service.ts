@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+
 const validator = require('validator');
 
 @Injectable()
@@ -24,7 +25,8 @@ export class ValidationService {
 }
 
 export function emailValidator(control: FormControl): { [s: string]: boolean } {
-  if (!validator.isEmail(control.value)) {
+  const value = control.value || '';
+  if (!validator.isEmail(value)) {
     return { 'invalidEmail': true };
   }
 }

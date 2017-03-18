@@ -1,8 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { UserService } from 'app/services/user.service';
-import { MessageService } from '../message/message.service';
+import { Component, OnInit } from '@angular/core';
+
+import { UserService } from 'app/services';
+import { routerTransition } from 'app/shared';
 import { SpinnerService } from 'app/components/spinner/spinner.service';
-import { apiUrl } from 'app/config';
+import { MessageService } from 'app/components/message/message.service';
 
 
 export interface IProfile {
@@ -20,17 +21,19 @@ export interface IProfile {
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: [ './profile.component.sass' ]
+  templateUrl: 'profile.component.html',
+  styleUrls: [ 'profile.component.sass' ],
+  animations: [ routerTransition() ],
+  host: { '[@routerTransition]': '' }
 })
 export class ProfileComponent implements OnInit {
   profile: IProfile;
   loading: boolean;
+  sendingEmail: boolean = false;
 
   constructor(private userService: UserService,
               private spinnerService: SpinnerService,
-              private messageService: MessageService,
-              @Inject(apiUrl) private apiUrl: string) {
+              private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -45,18 +48,25 @@ export class ProfileComponent implements OnInit {
           this.spinnerService.hide();
           if (err.error && err.error.message) {
             this.messageService.error(err.error.message);
+          } else {
+            this.messageService.error('Ошибка');
           }
         }
       );
   }
 
   confirm() {
+    this.sendingEmail = true;
+    this.spinnerService.show();
     this.userService.sendConfirm(this.profile._id)
       .subscribe(
         (res) => {
+          this.spinnerService.hide();
           this.messageService.info(`Письмо отправлено на ${this.profile.local.email}. Пройдите по ссылке из письма.`)
         },
         (err) => {
+          this.spinnerService.hide();
+          this.sendingEmail = false;
           if (err.error && err.error.message) {
             return this.messageService.error(err.error.message);
           }

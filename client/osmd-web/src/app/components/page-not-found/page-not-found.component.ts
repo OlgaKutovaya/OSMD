@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { routerTransition } from '../../router.animations';
+import { Component } from '@angular/core';
+
+import { routerTransition } from 'app/shared';
 
 @Component({
   selector: 'app-page-not-found',
@@ -8,12 +9,5 @@ import { routerTransition } from '../../router.animations';
   animations: [ routerTransition() ],
   host: { '[@routerTransition]': '' }
 })
-export class PageNotFoundComponent implements OnInit {
-
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
-
+export class PageNotFoundComponent {
 }

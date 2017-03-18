@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { routerTransition } from '../../router.animations';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'app/shared/user/user';
-import { MessageService } from '../message/message.service';
-import { ValidationService, emailValidator, matchingPassword } from 'app/services/validation.service';
-import { AuthService } from 'app/services/auth.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { AuthService, ValidationService, emailValidator, matchingPassword } from 'app/services';
+import { routerTransition, User } from 'app/shared';
+import { MessageService } from 'app/components/message/message.service';
 
 
 @Component({
   selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: [ './registration.component.sass' ],
+  templateUrl: 'registration.component.html',
+  styleUrls: [ 'registration.component.sass' ],
   animations: [ routerTransition() ],
   providers: [ ValidationService ],
   host: { '[@routerTransition]': '' }
@@ -24,6 +23,25 @@ export class RegistrationComponent {
     'password': '',
     'passwordConf': ''
   };
+  validationMessages: any = {
+    'username': {
+      'required': 'Введите имя.',
+      'minlength': 'Имя должно быть более 2 символов.',
+      'maxlength': 'Имя должно быть менее 30 симоволов.',
+    },
+    'email': {
+      'required': 'Введите Email.',
+      'invalidEmail': 'Неверный формат Email.'
+    },
+    'password': {
+      'required': 'Введите пароль.',
+      'minlength': 'Пароль должен быть более 6 символов.',
+    },
+    'passwordConf': {
+      'required': 'Подтвердите пароль.',
+      'isNotMatch': 'Пароли не совпадают.'
+    }
+  };
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -34,7 +52,7 @@ export class RegistrationComponent {
 
   }
 
-  createForm() {
+  createForm(): void {
     this.regForm = this.formBuilder.group({
       'username': [ '', Validators.compose([
         Validators.required,
@@ -90,25 +108,9 @@ export class RegistrationComponent {
       );
   }
 
-  validationMessages: any = {
-    'username': {
-      'required': 'Введите имя.',
-      'minlength': 'Имя должно быть более 2 символов.',
-      'maxlength': 'Имя должно быть менее 30 симоволов.',
-    },
-    'email': {
-      'required': 'Введите Email.',
-      'invalidEmail': 'Неверный формат Email.'
-    },
-    'password': {
-      'required': 'Введите пароль.',
-      'minlength': 'Пароль должен быть более 6 символов.',
-    },
-    'passwordConf': {
-      'required': 'Подтвердите пароль.',
-      'isNotMatch': 'Пароли не совпадают.'
-    }
-  };
+  onReset(): void {
+    this.regForm.reset();
+  }
 
 }
 

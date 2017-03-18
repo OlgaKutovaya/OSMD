@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { routerTransition } from '../../router.animations';
-import { ValidationService, emailValidator } from 'app/services/validation.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MessageService } from '../message/message.service';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/services/auth.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { ValidationService, emailValidator, AuthService } from 'app/services';
+import { routerTransition } from 'app/shared';
+import { MessageService } from 'app/components/message/message.service';
 
 @Component({
   selector: 'app-authentication',
-  templateUrl: './authentication.component.html',
-  styleUrls: [ './authentication.component.sass' ],
+  templateUrl: 'authentication.component.html',
+  styleUrls: [ 'authentication.component.sass' ],
   animations: [ routerTransition() ],
   providers: [ ValidationService ],
   host: { '[@routerTransition]': '' }
@@ -20,6 +20,15 @@ export class AuthenticationComponent {
     'email': '',
     'password': ''
   };
+  validationMessages: any = {
+    'email': {
+      'required': 'Введите Email.',
+      'invalidEmail': 'Неверный формат Email.'
+    },
+    'password': {
+      'required': 'Введите пароль.',
+    }
+  };
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -29,7 +38,7 @@ export class AuthenticationComponent {
     this.createForm();
   }
 
-  createForm() {
+  createForm(): void {
     this.authForm = this.formBuilder.group({
       'email': [ '', Validators.compose([
         Validators.required,
@@ -65,14 +74,7 @@ export class AuthenticationComponent {
       );
   }
 
-
-  validationMessages: any = {
-    'email': {
-      'required': 'Введите Email.',
-      'invalidEmail': 'Неверный формат Email.'
-    },
-    'password': {
-      'required': 'Введите пароль.',
-    }
-  };
+  onReset(): void {
+    this.authForm.reset();
+  }
 }

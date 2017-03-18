@@ -1,23 +1,22 @@
 import { Injectable, Inject } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { User } from '../shared/user/user';
-import { Observable } from 'rxjs';
-import { apiUrl } from '../config/config';
-import 'rxjs/add/operator/map';
-import { AuthService } from 'app/services/auth.service';
+import { Response } from '@angular/http'
+
+import { apiUrl } from 'app/config';
 import { AuthHttp } from 'angular2-jwt';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class UserService {
 
-  constructor(@Inject(apiUrl) private apiUrl: string,
-              private http: Http,
-              private authHttp: AuthHttp,
-              private authService: AuthService) {
+  constructor(private authHttp: AuthHttp,
+              @Inject(apiUrl) private apiUrl: string,) {
   }
 
   getAll(): Observable<any> {
-    return this.http.get('', {});
+    return this.authHttp.get(`${this.apiUrl}/users`)
+      .map((res: Response) => res.json())
+      .catch(this.handleError);
   }
 
   getProfile(): Observable<any> {

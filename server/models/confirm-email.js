@@ -8,7 +8,6 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const confirmSchema = mongoose.Schema({
   userId: {
     type: ObjectId,
-    index: true,
     required: true
   },
   confirmToken: {

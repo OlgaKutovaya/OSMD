@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ProfileComponent } from './components';
 import { AuthGuard } from 'app/guards';
-import { PageNotFoundComponent } from './components';
-
 
 const routes: Routes = [
   {
-    path: '**',
-    component: PageNotFoundComponent
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [ AuthGuard ]
   }
 ];
-
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
+  imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ],
   providers: [ AuthGuard ]
 })
-export class AppRoutingModule {
+export class ProfileRoutingModule {
+
 }

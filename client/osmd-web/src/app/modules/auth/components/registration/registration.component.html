@@ -52,5 +52,11 @@
       label="Зарегистрироваться"
       [disabled]="!regForm.valid"
     ></button>
+    <button
+      pButton
+      type="button"
+      label="Очистить"
+      (click)="onReset()"
+    ></button>
   </div>
 </form>

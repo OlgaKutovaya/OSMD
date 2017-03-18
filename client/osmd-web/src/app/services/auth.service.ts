@@ -1,10 +1,11 @@
 import { Injectable, Inject } from '@angular/core';
-import { User } from 'app/shared/user/user';
-import { Observable } from 'rxjs';
 import { RequestOptions, Http, Headers, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
-import { apiUrl } from 'app/config/config';
+
 import { tokenNotExpired, AuthConfig, AuthHttp } from 'angular2-jwt';
+import { User } from 'app/shared';
+import { apiUrl } from 'app/config';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
 
 
 @Injectable()

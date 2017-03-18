@@ -1,5 +1,5 @@
-<h2>Профиль</h2>
 <div *ngIf="profile">
+  <h2>Профиль</h2>
   <div *ngIf="profile.local">
     <p>Имя: {{profile.local.username}}</p>
     <p>Email: {{profile.local.email}}</p>
@@ -10,6 +10,7 @@
         pButton
         label="Подтвердить"
         (click)="confirm()"
+        [disabled]="sendingEmail"
       ></button>
     </p>
 

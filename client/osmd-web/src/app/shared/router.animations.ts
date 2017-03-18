@@ -66,8 +66,8 @@ export function slideToTop() {
 
 export function multiAnimation() {
   return trigger('routerTransition', [
-    state('void', style({ position: 'absolute', width: '100%', opacity: 0, padding: '5px' })),
-    state('*', style({ position: 'absolute', width: '100%', opacity: 1, padding: '5px' })),
+    state('void', style({ position: 'absolute', width: '100%', opacity: 0 })),
+    state('*', style({ position: 'absolute', width: '100%', opacity: 1 })),
     transition(':enter', [
       style({ opacity: 0 }),
       animate('0.3s ease-in-out', style({ opacity: 1 }))

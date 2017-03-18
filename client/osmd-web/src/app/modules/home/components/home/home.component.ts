@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { routerTransition } from '../../router.animations';
+
+import { routerTransition } from 'app/shared';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: [ './home.component.sass' ],
+  templateUrl: 'home.component.html',
+  styleUrls: [ 'home.component.sass' ],
   animations: [ routerTransition() ],
   host: { '[@routerTransition]': '' }
 })

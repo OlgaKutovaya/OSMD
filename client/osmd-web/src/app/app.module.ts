@@ -1,69 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, RequestOptions, Http } from '@angular/http';
-import { AppRoutingModule, navigatableComponents } from './app-routing.module';
-import {
-  AccordionModule,
-  DialogModule,
-  InputTextModule,
-  ButtonModule,
-  GrowlModule,
-  ConfirmDialogModule,
-  ConfirmationService
-} from 'primeng/primeng';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { UserService } from './services/user.service';
-import { MessageComponent } from './components/message/message.component';
-import { AuthService, authHttpServiceFactory } from 'app/services/auth.service';
-import { ProfileComponent } from './components/profile/profile.component';
-import { AuthGuard } from 'app/guards/auth.guard';
-import { AuthHttp } from 'angular2-jwt';
-import { SpinnerComponent } from 'app/components/spinner/spinner.component';
-import { SpinnerService } from 'app/components/spinner/spinner.service';
-import { MessageService } from 'app/components/message/message.service';
-import { config, apiUrl } from 'app/config';
+import { AppRoutingModule } from './app-routing.module';
+import { HeaderComponent, MessageComponent, SpinnerComponent, PageNotFoundComponent } from './components'
+import { HomeModule, AuthModule, CommonModule, ProfileModule } from './modules';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ...navigatableComponents,
     HeaderComponent,
-    SidebarComponent,
     MessageComponent,
-    ProfileComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PageNotFoundComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpModule,
-    AppRoutingModule,
-    AccordionModule,
-    DialogModule,
-    InputTextModule,
-    ButtonModule,
-    GrowlModule,
-    ConfirmDialogModule
+    BrowserModule,
+    CommonModule,
+    HomeModule,
+    ProfileModule,
+    AuthModule,
+    AppRoutingModule
   ],
-  providers: [
-    UserService,
-    AuthService,
-    MessageService,
-    ConfirmationService,
-    AuthGuard,
-    SpinnerService,
-    {
-      provide: AuthHttp,
-      useFactory: authHttpServiceFactory,
-      deps: [ Http, RequestOptions ]
-    },
-    { provide: apiUrl, useValue: config.apiUrl }
-  ],
+  providers: [],//look "modules/common/common.module.ts"
   bootstrap: [ AppComponent ]
 })
 export class AppModule {

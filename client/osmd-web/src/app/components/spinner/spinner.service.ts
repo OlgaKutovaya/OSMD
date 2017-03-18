@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
 import { Router, NavigationStart } from '@angular/router';
-import 'rxjs/add/operator/delay';
 
+import { Subject, Observable } from 'rxjs';
 
 @Injectable()
 export class SpinnerService {
@@ -17,11 +16,11 @@ export class SpinnerService {
     })
   }
 
-  show() {
+  show(): void {
     this.spinnerSubject.next(true);
   }
 
-  hide() {
+  hide(): void {
     this.spinnerSubject.next();
   }
 }

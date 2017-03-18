@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SpinnerService } from 'app/components/spinner/spinner.service';
+
+import { SpinnerService } from './spinner.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -8,8 +9,8 @@ import { Subscription } from 'rxjs';
   styleUrls: [ './spinner.component.sass' ]
 })
 export class SpinnerComponent implements OnInit,OnDestroy {
-  visible = false;
   private spinnerSubscription: Subscription;
+  visible: boolean = false;
 
   constructor(private spinnerService: SpinnerService) {
   }
