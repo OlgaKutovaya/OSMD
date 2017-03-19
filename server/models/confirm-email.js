@@ -16,7 +16,6 @@ const confirmSchema = mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
     expires: 60 * 60  //seconds
   }
 });
@@ -26,7 +25,8 @@ confirmSchema.statics.createConfirm = (userId) => {
     .then(buff => {
       return Confirm.create({
         userId: userId,
-        confirmToken: buff.toString('hex')
+        confirmToken: buff.toString('hex'),
+        createdAt: new Date()
       });
     });
 };
