@@ -12,7 +12,7 @@ const config = {
     apiRoute: '/api/v1',
   },
   mongoose: {
-    host: !process.env.MONGOLAB ? 'mongodb://localhost/osmd' : 'mongodb://osmdadmin:123456@ds113650.mlab.com:13650/osmd'
+    host: process.env.MONGOLAB === 'true' ? 'mongodb://osmdadmin:123456@ds113650.mlab.com:13650/osmd' : 'mongodb://localhost/osmd'
   },
   jwt: {
     secret: jwtSecret || 'H1teNDQcxrkxKl4vmql',
