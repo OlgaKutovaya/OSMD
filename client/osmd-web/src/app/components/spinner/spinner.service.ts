@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 
-import { Subject, Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class SpinnerService {
@@ -13,7 +14,7 @@ export class SpinnerService {
       if (event instanceof NavigationStart) {
         this.spinnerSubject.next();
       }
-    })
+    });
   }
 
   show(): void {

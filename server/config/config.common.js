@@ -75,8 +75,4 @@ config.passport = {
   twitterAuthOptions: {}
 };
 
-
 module.exports = config;
-
-
-

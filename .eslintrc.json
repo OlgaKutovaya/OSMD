@@ -23,6 +23,10 @@
       "error",
       "always"
     ],
+    "eol-last": [
+      "warn",
+      "always"
+    ],
     "no-console": "off",
     "no-unused-vars": "warn"
   }

@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HeaderComponent, MessageComponent, SpinnerComponent, PageNotFoundComponent } from './components'
+import { HeaderComponent, MessageComponent, SpinnerComponent, PageNotFoundComponent } from './components';
 import { HomeModule, AuthModule, CommonModule, ProfileModule } from './modules';
 
 @NgModule({
@@ -24,7 +24,7 @@ import { HomeModule, AuthModule, CommonModule, ProfileModule } from './modules';
     AuthModule,
     AppRoutingModule
   ],
-  providers: [],//look "modules/common/common.module.ts"
+  providers: [], // look "modules/common/common.module.ts"
   bootstrap: [ AppComponent ]
 })
 export class AppModule {

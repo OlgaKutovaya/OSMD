@@ -11,12 +11,16 @@ export class ValidationService {
       return formErrors;
     }
     for (const field in formErrors) {
-      formErrors[ field ] = '';
-      const control = formGroup.get(field);
-      if (control && control.dirty && !control.valid) {
-        const messages = validationMessages[ field ];
-        for (const key in control.errors) {
-          formErrors[ field ] += messages[ key ] + ' ';
+      if (formErrors.hasOwnProperty(field)) {
+        formErrors[ field ] = '';
+        const control = formGroup.get(field);
+        if (control && control.dirty && !control.valid) {
+          const messages = validationMessages[ field ];
+          for (const key in control.errors) {
+            if (control.errors.hasOwnProperty(key)) {
+              formErrors[ field ] += messages[ key ] + ' ';
+            }
+          }
         }
       }
     }
@@ -33,11 +37,11 @@ export function emailValidator(control: FormControl): { [s: string]: boolean } {
 
 export function matchingPassword(passwordKey: string, passwordConfKey: string) {
   return (group: FormGroup) => {
-    let passwordInput = group.controls[ passwordKey ];
-    let passwordConfInput = group.controls[ passwordConfKey ];
+    const passwordInput = group.controls[ passwordKey ];
+    const passwordConfInput = group.controls[ passwordConfKey ];
     if (passwordInput.value !== passwordConfInput.value) {
       return passwordConfInput.setErrors({ 'isNotMatch': true });
     }
     return null;
-  }
+  };
 }

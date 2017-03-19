@@ -12,7 +12,7 @@ import { MessageService } from '../message/message.service';
 })
 export class HeaderComponent {
 
-  constructor(private authService: AuthService,
+  constructor(public authService: AuthService,
               private confirmationService: ConfirmationService,
               private messageService: MessageService,
               private router: Router) {

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 
 import { Message } from 'primeng/primeng';
-import { Subject, Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
@@ -19,7 +20,7 @@ export class MessageService {
           this.subject.next();
         }
       }
-    })
+    });
   }
 
   success(message: string, keepAfterNavigationChange = false): void {

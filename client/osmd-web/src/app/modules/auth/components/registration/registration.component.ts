@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -12,10 +12,10 @@ import { MessageService } from 'app/components/message/message.service';
   templateUrl: 'registration.component.html',
   styleUrls: [ 'registration.component.sass' ],
   animations: [ routerTransition() ],
-  providers: [ ValidationService ],
-  host: { '[@routerTransition]': '' }
+  providers: [ ValidationService ]
 })
 export class RegistrationComponent {
+  @HostBinding('@routerTransition') '';
   regForm: FormGroup;
   formErrors: any = {
     'username': '',
@@ -78,7 +78,7 @@ export class RegistrationComponent {
   }
 
   onRegistration(values): void {
-    let user = new User();
+    const user = new User();
     user.username = values.username.trim();
     user.email = values.email.trim();
     user.password = values.password.trim();
@@ -97,9 +97,9 @@ export class RegistrationComponent {
               this.messageService.error(err.error.message);
             }
             if (err.error.errors) {
-              err.error.errors.forEach((err) => {
-                this.messageService.error(err);
-              })
+              err.error.errors.forEach((errItem) => {
+                this.messageService.error(errItem);
+              });
             }
           } else {
             this.messageService.error('Ошибка');

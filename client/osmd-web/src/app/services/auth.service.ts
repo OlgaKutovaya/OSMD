@@ -4,8 +4,9 @@ import { RequestOptions, Http, Headers, Response } from '@angular/http';
 import { tokenNotExpired, AuthConfig, AuthHttp } from 'angular2-jwt';
 import { User } from 'app/shared';
 import { apiUrl } from 'app/config';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 
 @Injectable()
@@ -21,7 +22,7 @@ export class AuthService {
 
   registration(user: User): Observable<any> {
     console.log(user);
-    let headers = new Headers({ 'Content-Type': 'application/json' });
+    const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers });
     return this.http.post(`${this.apiUrl}/users/registration`, user, options)
       .map((res: Response) => res.json())
@@ -30,7 +31,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     const data = { email, password };
-    let headers = new Headers({ 'Content-Type': 'application/json' });
+    const headers = new Headers({ 'Content-Type': 'application/json' });
     const options = new RequestOptions({ headers });
     return this.http.post(`${this.apiUrl}/users/login`, data, options)
       .map((res: Response) => res.json())

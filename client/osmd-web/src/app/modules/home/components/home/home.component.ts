@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 
 import { routerTransition } from 'app/shared';
 
@@ -6,10 +6,10 @@ import { routerTransition } from 'app/shared';
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: [ 'home.component.sass' ],
-  animations: [ routerTransition() ],
-  host: { '[@routerTransition]': '' }
+  animations: [ routerTransition() ]
 })
 export class HomeComponent implements OnInit {
+  @HostBinding('@routerTransition') '';
 
   constructor() {
   }

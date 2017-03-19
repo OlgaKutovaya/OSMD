@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 import { routerTransition } from 'app/shared';
 
@@ -7,7 +7,7 @@ import { routerTransition } from 'app/shared';
   templateUrl: './page-not-found.component.html',
   styleUrls: [ './page-not-found.component.sass' ],
   animations: [ routerTransition() ],
-  host: { '[@routerTransition]': '' }
 })
 export class PageNotFoundComponent {
+  @HostBinding('@routerTransition') '';
 }

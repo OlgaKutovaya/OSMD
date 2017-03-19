@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 
 import { UserService } from 'app/services';
 import { routerTransition } from 'app/shared';
@@ -12,28 +12,29 @@ export interface IProfile {
     username: string,
     email: string,
     confirmed: boolean
-  },
+  };
   google: {
     name: string,
     email: string
-  }
+  };
 }
 
 @Component({
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
   styleUrls: [ 'profile.component.sass' ],
-  animations: [ routerTransition() ],
-  host: { '[@routerTransition]': '' }
+  animations: [ routerTransition() ]
 })
 export class ProfileComponent implements OnInit {
+  @HostBinding('@routerTransition') '';
   profile: IProfile;
   loading: boolean;
-  sendingEmail: boolean = false;
+  sendingEmail: boolean;
 
   constructor(private userService: UserService,
               private spinnerService: SpinnerService,
               private messageService: MessageService) {
+    this.sendingEmail = false;
   }
 
   ngOnInit() {
@@ -62,7 +63,7 @@ export class ProfileComponent implements OnInit {
       .subscribe(
         (res) => {
           this.spinnerService.hide();
-          this.messageService.info(`Письмо отправлено на ${this.profile.local.email}. Пройдите по ссылке из письма.`)
+          this.messageService.info(`Письмо отправлено на ${this.profile.local.email}. Пройдите по ссылке из письма.`);
         },
         (err) => {
           this.spinnerService.hide();
@@ -72,7 +73,7 @@ export class ProfileComponent implements OnInit {
           }
           this.messageService.error('Ошибка');
         }
-      )
+      );
   }
 
 }
