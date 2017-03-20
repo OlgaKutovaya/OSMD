@@ -20,5 +20,9 @@
     <p>Имя: {{profile.google.name}}</p>
     <p>Email: {{profile.google.email}}</p>
   </div>
+  <a
+    *ngIf="isAdmin()"
+    [routerLink]="['/admin']"
+  >Администрирование</a>
 </div>
 

@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent, MessageComponent, SpinnerComponent, PageNotFoundComponent } from './components';
-import { HomeModule, AuthModule, CommonModule, ProfileModule } from './modules';
+import { HomeModule, AuthModule, CommonModule, ProfileModule, AdminModule } from './modules';
 
 @NgModule({
   declarations: [
@@ -22,6 +22,7 @@ import { HomeModule, AuthModule, CommonModule, ProfileModule } from './modules';
     HomeModule,
     ProfileModule,
     AuthModule,
+    AdminModule,
     AppRoutingModule
   ],
   providers: [], // look "modules/common/common.module.ts"

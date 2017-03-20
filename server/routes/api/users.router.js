@@ -523,7 +523,7 @@ router.get('/confirm', (req, res, next) => {
 router.get('/profile', passportJwtAuth, (req, res) => {
   const user = _.assign({}, req.user);
   res.json({
-    profile: _.omit(user, ['role', 'createdAt', 'updatedAt'])
+    profile: _.omit(user, ['createdAt', 'updatedAt'])
   });
 });
 

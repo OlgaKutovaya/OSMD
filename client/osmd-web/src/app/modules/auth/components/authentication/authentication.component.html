@@ -1,5 +1,5 @@
 <h2 class="form-title">Вход</h2>
-<form class="reg-form" [formGroup]="authForm" (ngSubmit)="onLogin(authForm.value)">
+<form class="reg-form" [formGroup]="authForm" (ngSubmit)="onLogin(authForm.value)" novalidate>
   <div class="form-group">
     <label for="reg-email" class="form-label">Email:</label>
     <input

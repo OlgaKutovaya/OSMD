@@ -15,7 +15,7 @@ import { MessageService } from 'app/components/message/message.service';
   providers: [ ValidationService ]
 })
 export class RegistrationComponent {
-  @HostBinding('@routerTransition') '';
+  @HostBinding('@routerTransition') routerTransition;
   regForm: FormGroup;
   formErrors: any = {
     'username': '',

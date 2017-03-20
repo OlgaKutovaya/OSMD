@@ -9,5 +9,5 @@ import { routerTransition } from 'app/shared';
   animations: [ routerTransition() ],
 })
 export class PageNotFoundComponent {
-  @HostBinding('@routerTransition') '';
+  @HostBinding('@routerTransition') routerTransition;
 }

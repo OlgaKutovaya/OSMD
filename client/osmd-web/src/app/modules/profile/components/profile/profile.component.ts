@@ -17,6 +17,7 @@ export interface IProfile {
     name: string,
     email: string
   };
+  role: string[];
 }
 
 @Component({
@@ -26,7 +27,7 @@ export interface IProfile {
   animations: [ routerTransition() ]
 })
 export class ProfileComponent implements OnInit {
-  @HostBinding('@routerTransition') '';
+  @HostBinding('@routerTransition') routerTransition;
   profile: IProfile;
   loading: boolean;
   sendingEmail: boolean;
@@ -56,7 +57,7 @@ export class ProfileComponent implements OnInit {
       );
   }
 
-  confirm() {
+  confirm(): void {
     this.sendingEmail = true;
     this.spinnerService.show();
     this.userService.sendConfirm(this.profile._id)
@@ -74,6 +75,10 @@ export class ProfileComponent implements OnInit {
           this.messageService.error('Ошибка');
         }
       );
+  }
+
+  isAdmin(): boolean {
+    return this.profile.role.indexOf('admin') > -1;
   }
 
 }

@@ -14,7 +14,7 @@ import { MessageService } from 'app/components/message/message.service';
   providers: [ ValidationService ]
 })
 export class AuthenticationComponent {
-  @HostBinding('@routerTransition') '';
+  @HostBinding('@routerTransition') routerTransition;
   authForm: FormGroup;
   formErrors: any = {
     'email': '',
