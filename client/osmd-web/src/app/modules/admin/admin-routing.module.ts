@@ -1,15 +1,29 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AdminComponent } from './components';
-import { AuthGuard } from 'app/guards';
+import { AdminComponent, AdminUsersTableComponent, AdminDocumentsTableComponent } from './components';
+import { AuthGuard, AdminGuard } from 'app/guards';
 
 
 const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [ AuthGuard ]
+    canActivate: [ AuthGuard, AdminGuard ],
+    children: [
+      {
+        path: 'users', component: AdminUsersTableComponent
+      },
+      /*{
+        path: 'users/:id', component: AdminUserDetailsComponent
+      },*/
+      {
+        path: 'documents', component: AdminDocumentsTableComponent
+      },
+      {
+        path: '', pathMatch: 'full', redirectTo: 'users'
+      }
+    ]
   }
 ];
 @NgModule({

@@ -1,6 +1,7 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 
 import { routerTransition } from 'app/shared';
+import { MenuItem } from 'primeng/primeng';
 
 
 @Component({
@@ -11,11 +12,13 @@ import { routerTransition } from 'app/shared';
 })
 export class AdminComponent implements OnInit {
   @HostBinding('@routerTransition') routerTransition;
-
-  constructor() {
-  }
+  items: MenuItem[];
 
   ngOnInit() {
+    this.items = [
+      { label: 'Пользователи', icon: 'fa-users', routerLink: [ 'admin', 'users' ] },
+      { label: 'Документы', icon: 'fa-book', routerLink: [ 'admin', 'documents' ] }
+    ];
   }
 
 }

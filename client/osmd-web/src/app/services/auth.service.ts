@@ -15,7 +15,6 @@ export class AuthService {
   authToken: string;
   user: any;
 
-
   constructor(private http: Http,
               @Inject(apiUrl) private apiUrl: string) {
     this.loadToken();
@@ -49,7 +48,6 @@ export class AuthService {
 
   loadToken() {
     this.authToken = localStorage.getItem('jwt_token');
-    return this.authToken;
   }
 
   loggedIn() {
@@ -64,10 +62,13 @@ export class AuthService {
   }
 
 
+
+
   handleError(err: Response): Observable<any> {
     console.log(err);
     return Observable.throw(err.json());
   }
+
 }
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {

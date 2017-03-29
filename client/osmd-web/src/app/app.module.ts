@@ -1,11 +1,11 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
+import { HeaderComponent, MessageComponent, PageNotFoundComponent, SpinnerComponent } from './components';
+import { AdminModule, AuthModule, CommonModule, HomeModule, ProfileModule } from './modules';
 import { AppRoutingModule } from './app-routing.module';
-import { HeaderComponent, MessageComponent, SpinnerComponent, PageNotFoundComponent } from './components';
-import { HomeModule, AuthModule, CommonModule, ProfileModule, AdminModule } from './modules';
 
 @NgModule({
   declarations: [

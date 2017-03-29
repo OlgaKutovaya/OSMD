@@ -6,6 +6,7 @@ const
   mongoose = require('../libs/mongoose'),
   bcrypt = require('bcrypt'),
   validator = require('validator'),
+  Promise = require('bluebird'),
   findOrCreate = require('mongoose-findorcreate');
 
 /**
@@ -92,6 +93,18 @@ userSchema.statics.createLocalUser = (user) => {
   });
 };
 
+
+userSchema.statics.pagination = (skip, limit) => {
+  const userData = User.find()
+    .select('+role')
+    .skip(skip)
+    .limit(limit)
+    .lean();
+  const count = User.count();
+
+  return Promise.all([userData, count]);
+};
+
 /**
  *
  * @param plainPassword:string
@@ -116,6 +129,10 @@ userSchema.statics.findUserById = (id) => {
  */
 userSchema.statics.findUserByQuery = (query) => {
   return User.findOne(query);
+};
+
+userSchema.statics.deleteById = (userId) => {
+  return User.findByIdAndRemove(userId);
 };
 
 

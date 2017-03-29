@@ -119,7 +119,10 @@ app.use((err, req, res, next) => {
     console.error(err);
   }
   if (/^\/api\/v\d\/(?!users\/confirm)/.test(req.url)) {
-    res.json({err});
+    res.json({
+      message: err.message,
+      status: err.status
+    });
   } else {
     res.render('error');
   }

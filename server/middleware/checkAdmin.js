@@ -17,8 +17,6 @@ module.exports = (req, res, next) => {
     }
   }
   return res.status(403).json({
-    error: {
-      message: 'You are not admin'
-    }
+    message: 'You are not admin'
   });
 };

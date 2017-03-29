@@ -1,0 +1,18 @@
+p-footer
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+\:host /deep/ .actions-column
+  text-align: center
+  width: 100px
+
+\:host /deep/ .ui-button-warning
+  &:hover,&:focus
+    background: darken(#f0ad4e, 20%) !important
+    border-color: darken(#f0ad4e, 20%) !important
+
+\:host /deep/ .ui-button-danger
+  &:hover,&:focus
+    background: darken(#d9534f, 20%) !important
+    border-color: darken(#d9534f, 20%) !important

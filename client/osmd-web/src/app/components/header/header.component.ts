@@ -23,7 +23,7 @@ export class HeaderComponent {
       message: 'Вы уверены, что хотите выйти?',
       icon: 'fa fa-question-circle',
       header: 'Выход',
-      key: 'logout',
+      key: 'confirm',
       accept: () => {
         this.messageService.info('Вы разлогинились.', true);
         this.authService.logout();

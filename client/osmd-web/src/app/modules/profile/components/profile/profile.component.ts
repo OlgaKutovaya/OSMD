@@ -42,9 +42,9 @@ export class ProfileComponent implements OnInit {
     this.spinnerService.show();
     this.userService.getProfile()
       .subscribe(
-        (data) => {
+        (profile) => {
           this.spinnerService.hide();
-          this.profile = data.profile;
+          this.profile = profile;
         },
         (err) => {
           this.spinnerService.hide();

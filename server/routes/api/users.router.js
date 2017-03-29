@@ -16,7 +16,7 @@ const
   mailer = require('../../libs/mailer'),
   checkMongoId = require('../../middleware/check-mongoId'),
   {notFound} = require('../../utils/res-msg'),
-  {HttpError}=require('../../utils/errors'),
+  {HttpError} = require('../../utils/errors'),
   {registerValidator, objectIdValidator} = require('../../utils/validation-utils'),
   _ = require('lodash');
 
@@ -82,16 +82,35 @@ const
  }
 
  */
-router.get('/', (req, res, next) => {
-  User.find()
-    .lean()
-    .then(users => {
+router.get('/', passportJwtAuth, checkAdmin, (req, res, next) => {
+  const {skip = 0, limit = 10} = req.query;
+  User.pagination(parseInt(skip), parseInt(limit))
+    .spread((users, count) => {
       res.json({
-        users: users
+        users: users,
+        count: count
       });
     }).catch(err => next(err));
 
 });
+
+router.delete('/:id', checkMongoId, passportJwtAuth, checkAdmin, (req, res, next) => {
+  const userId = req.params.id;
+  User.deleteById(userId)
+    .then(result => {
+      if (result) {
+        return res.json({
+          message: 'Пользователь удален',
+          result: result
+        });
+      }
+      res.status(404).json({
+        message: 'Пользователь не найден',
+      });
+    })
+    .catch(err => next(err));
+});
+
 
 /**
  @api {post} /users/register Registration
@@ -404,7 +423,7 @@ router.get('/login/facebook/callback', passport.authenticate('facebook', {sessio
 
  */
 router.post('/send', passportJwtAuth, (req, res, next) => {
-  const {email, confirmed, username}=req.user.local;
+  const {email, confirmed, username} = req.user.local;
   if (confirmed) {
     return res.status(403).json({
       error: {
@@ -522,21 +541,27 @@ router.get('/confirm', (req, res, next) => {
 
 router.get('/profile', passportJwtAuth, (req, res) => {
   const user = _.assign({}, req.user);
-  res.json({
-    profile: _.omit(user, ['createdAt', 'updatedAt'])
-  });
+  res.json(_.omit(user, ['createdAt', 'updatedAt']));
 });
 
 /**
  * Admin route for users with role 'admin'
  */
 
-router.get('/admin', passportJwtAuth, checkAdmin, (req, res, next) => {
+router.get('/is-admin', passportJwtAuth, (req, res) => {
+
+  if (req.user && req.user.role) {
+    if (req.user.role.indexOf('admin') > -1) {
+      return res.json({
+        isAdmin: true
+      });
+    }
+  }
   res.json({
-    success: true,
-    admin: true
+    isAdmin: false
   });
 });
+
 
 /**
  * Logout (isn't working yet)

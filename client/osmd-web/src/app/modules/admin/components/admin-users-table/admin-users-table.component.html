@@ -1,0 +1,71 @@
+<p-dataTable
+  [value]="users"
+  [rows]="10"
+  resizableColumns="true"
+  [rowsPerPageOptions]="[5,10,20,100]"
+  [paginator]="true"
+  [lazy]="true"
+  selectionMode="single"
+  [totalRecords]="totalRecords"
+  (onLazyLoad)="loadUsersLazy($event)"
+>
+  <p-column styleClass="actions-column">
+    <template pTemplate="header">
+      №
+    </template>
+    <template let-ri="rowIndex" pTemplate="body">
+      {{ ri+1 }}
+    </template>
+  </p-column>
+  <p-column *ngFor="let col of columns" [field]="col.field" [header]="col.header"></p-column>
+  <p-column styleClass="actions-column">
+    <template pTemplate="header">
+      Действия
+    </template>
+    <template let-user="rowData" pTemplate="body" class="actions-column">
+      <button
+        pButton
+        type="button"
+        icon="fa-eye"
+        class="ui-button-success"
+        (click)="editUser(user)"
+      ></button>
+      <button
+        pButton
+        type="button"
+        icon="fa-trash"
+        class="ui-button-danger"
+        (click)="deleteUser(user)"
+      ></button>
+    </template>
+  </p-column>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      icon="fa-plus"
+      (click)="showAddDialog()"
+      label="Добавить"
+    ></button>
+    <span>Всего пользователей: {{ totalRecords }}</span>
+  </p-footer>
+</p-dataTable>
+
+
+
+<p-dialog header="Редактирование пользователя" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
+          [modal]="true">
+  <!--<div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="false">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4"><label for="name">Имя</label></div>
+      <div class="ui-grid-col-8"><input pInputText id="name" /></div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" label="Удалить"></button>
+      <button type="button" pButton icon="fa-check" label="Сохранить"></button>
+    </div>
+  </p-footer>-->
+</p-dialog>
+
