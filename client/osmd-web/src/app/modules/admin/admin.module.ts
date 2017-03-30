@@ -7,9 +7,15 @@ import {
   TabMenuModule,
   DataTableModule,
   SharedModule,
-  DialogModule,
+  DialogModule
 } from 'primeng/primeng';
-import { AdminComponent, AdminUsersTableComponent, AdminDocumentsTableComponent } from './components';
+import {
+  AdminComponent,
+  AdminUsersTableComponent,
+  AdminUserDetailsComponent,
+  AdminDocumentsTableComponent,
+  AdminNavigationComponent
+} from './components';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminGuard } from 'app/guards';
 
@@ -24,7 +30,13 @@ import { AdminGuard } from 'app/guards';
     DialogModule,
     AdminRoutingModule
   ],
-  declarations: [ AdminComponent, AdminUsersTableComponent, AdminDocumentsTableComponent ],
+  declarations: [
+    AdminComponent,
+    AdminUsersTableComponent,
+    AdminUserDetailsComponent,
+    AdminDocumentsTableComponent,
+    AdminNavigationComponent
+  ],
   providers: [ AdminGuard ]
 })
 export class AdminModule {

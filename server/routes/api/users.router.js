@@ -290,7 +290,7 @@ router.post('/login', (req, res, next) => {
             if (!isMatch) {
               return res.status(403).json({
                 error: {
-                  message: 'Invalid password'
+                  message: 'Неправильный пароль'
                 }
               });
             }
@@ -614,19 +614,17 @@ router.get('/logout', (req, res) => {
  }
 
  */
-router.get('/:id', checkMongoId, (req, res, next) => {
+router.get('/:id', checkMongoId, passportJwtAuth, checkAdmin, (req, res, next) => {
   const userId = req.params.id;
   User.findUserById(userId)
     .lean()
     .then(user => {
       if (!user) {
-        return notFound(res, 'User not found');
+        return notFound(res, 'Пользователь не найден');
       }
-      res.json({
-        success: true,
-        user: user
-      });
-    }).catch(err => next(err));
+      res.json(user);
+    })
+    .catch(err => next(err));
 });
 
 module.exports = router;

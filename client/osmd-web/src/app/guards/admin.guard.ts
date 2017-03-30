@@ -19,7 +19,8 @@ export class AdminGuard implements CanActivate {
     return this.userService.isAdmin()
       .switchMap(isAdmin => {
         if (!isAdmin) {
-          this.messageService.error('Вы не администратор', true);
+          this.messageService.error('Доступ запрещен', true);
+          this.router.navigate([ '/profile' ]);
         }
         return Observable.of(isAdmin);
       })

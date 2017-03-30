@@ -1,11 +1,9 @@
-p-footer
-  display: flex
-  justify-content: space-between
-  align-items: center
-
 \:host /deep/ .actions-column
   text-align: center
   width: 100px
+
+\:host /deep/ .ui-datatable-footer
+  text-align: right
 
 \:host /deep/ .ui-button-warning
   &:hover, &:focus
@@ -21,3 +19,6 @@ p-footer
   &:hover, &:focus
     background: darken(#5cb85c, 20%) !important
     border-color: darken(#5cb85c, 20%) !important
+
+h3
+  text-align: center

@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AdminComponent, AdminUsersTableComponent, AdminDocumentsTableComponent } from './components';
+import {
+  AdminComponent,
+  AdminUsersTableComponent,
+  AdminUserDetailsComponent,
+  AdminDocumentsTableComponent
+} from './components';
 import { AuthGuard, AdminGuard } from 'app/guards';
 
 
@@ -14,9 +19,9 @@ const routes: Routes = [
       {
         path: 'users', component: AdminUsersTableComponent
       },
-      /*{
+      {
         path: 'users/:id', component: AdminUserDetailsComponent
-      },*/
+      },
       {
         path: 'documents', component: AdminDocumentsTableComponent
       },

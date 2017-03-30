@@ -17,13 +17,19 @@ export class UserService {
               @Inject(apiUrl) private apiUrl: string) {
   }
 
-  getUsers(skip: number, limit: number): Observable<{ users: User[], count: number }> {
+  getAllUsers(skip: number, limit: number): Observable<{ users: User[], count: number }> {
     const query = [
       `skip=${skip}`,
       `limit=${limit}`
     ].join('&');
 
     return this.authHttp.get(`${this.apiUrl}/users?${query}`)
+      .map((res: Response) => res.json())
+      .catch(this.handleError);
+  }
+
+  getUser(userId: string): Observable<User> {
+    return this.authHttp.get(`${this.apiUrl}/users/${userId}`)
       .map((res: Response) => res.json())
       .catch(this.handleError);
   }

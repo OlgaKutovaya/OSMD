@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { User } from '../../models';
 import { UserService } from 'app/services';
@@ -14,20 +15,17 @@ import { MessageService } from 'app/components/message/message.service';
 export class AdminUsersTableComponent implements OnInit {
   users: User[];
   totalRecords: number;
-  displayDialog = false;
-  user: User;
   paginationSkip: number;
   paginationLimit: number;
   columns: any[] = [
-    { field: '_id', header: 'ID' },
-    { field: 'local.username', header: 'Имя' },
     { field: 'local.email', header: 'Email' },
-    { field: 'role', header: 'Права' }
+    { field: 'local.username', header: 'Имя' }
   ];
 
   constructor(private userService: UserService,
               private spinnerService: SpinnerService,
               private confirmationService: ConfirmationService,
+              private router: Router,
               private messageService: MessageService) {
   }
 
@@ -42,38 +40,27 @@ export class AdminUsersTableComponent implements OnInit {
   }
 
   getUsersPagination(skip, limit) {
-    this.userService.getUsers(skip, limit)
-      .subscribe((res) => {
-        this.spinnerService.hide();
-        this.totalRecords = res.count;
-        this.users = res.users;
-      });
+    this.userService.getAllUsers(skip, limit)
+      .subscribe(
+        (res) => {
+          this.spinnerService.hide();
+          this.totalRecords = res.count;
+          this.users = res.users;
+        },
+        (err) => {
+          this.spinnerService.hide();
+          this.messageService.error(err);
+        }
+      );
   }
 
-  showAddDialog() {
-    // this.newUser = true;
-    this.user = new User();
-    // this.user.
-    this.displayDialog = true;
-  }
-
-  onRowSelect(user: User) {
-    // this.user = this.cloneUser(user);
-    this.displayDialog = true;
-  }
-
-  cloneUser(userRef: User) {
-    const user = new User();
-    for (const prop in userRef) {
-      if (userRef.hasOwnProperty(prop)) {
-        user[ prop ] = userRef[ prop ];
-      }
-    }
-    return user;
-  }
-
-  editUser(user) {
+  showUserDetails(user) {
     console.log(user);
+    this.router.navigate([ 'admin/users', user._id ]);
+  }
+
+  isAdmin(user): boolean {
+    return user.role.indexOf('admin') > -1;
   }
 
   deleteUser(user: User) {
@@ -90,7 +77,7 @@ export class AdminUsersTableComponent implements OnInit {
             (res) => {
               this.spinnerService.hide();
               console.log(res);
-              this.messageService.info(`Пользователь c id ${userId} удален.`);
+              this.messageService.info(`Пользователь удален.`);
               this.getUsersPagination(this.paginationSkip, this.paginationLimit);
             },
             (err) => {

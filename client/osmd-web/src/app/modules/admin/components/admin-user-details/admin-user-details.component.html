@@ -1,72 +1,23 @@
-<p-dataTable
-  [value]="users"
-  [rows]="10"
-  resizableColumns="true"
-  [rowsPerPageOptions]="[5,10,20,100]"
-  [paginator]="true"
-  [lazy]="true"
-  selectionMode="single"
-  [totalRecords]="totalRecords"
-  (onLazyLoad)="loadUsersLazy($event)"
->
-  <p-column styleClass="actions-column">
-    <template pTemplate="header">
-      №
-    </template>
-    <template let-ri="rowIndex" pTemplate="body">
-      {{ ri+1 }}
-    </template>
-  </p-column>
-  <p-column *ngFor="let col of columns" [field]="col.field" [header]="col.header"></p-column>
-  <p-column styleClass="actions-column">
-    <template pTemplate="header">
-      Действия
-    </template>
-    <template let-user="rowData" pTemplate="body" class="actions-column">
-      <button
-        pButton
-        type="button"
-        icon="fa-pencil"
-        class="ui-button-warning"
-        (click)="editUser(user)"
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa-trash"
-        class="ui-button-danger"
-        (click)="deleteUser(user)"
-      ></button>
-    </template>
-  </p-column>
-  <p-footer>
-    <button
-      type="button"
-      pButton
-      icon="fa-plus"
-      (click)="showAddDialog()"
-      label="Добавить"
-    ></button>
-    <span>Всего пользователей: {{ totalRecords }}</span>
-  </p-footer>
-</p-dataTable>
+<div *ngIf="user">
+  <h3>Данные учетной записи</h3>
 
-
-<!--<p>Selected : {{ selectedUser|json }}</p>-->
-
-<p-dialog header="Редактирование пользователя" [(visible)]="displayDialog" [responsive]="true" showEffect="fade"
-          [modal]="true">
-  <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedUser">
-    <div class="ui-grid-row">
-      <div class="ui-grid-col-4"><label for="name">Имя</label></div>
-      <div class="ui-grid-col-8"><input pInputText id="name" [(ngModel)]="selectedUser.local.username"/></div>
-    </div>
+  <p>ID: {{ user._id }}</p>
+  <div *ngIf="user.local?.email">
+    <h4>Локальные данные</h4>
+    <p>Имя: {{ user.local.username }}</p>
+    <p>Email: {{ user.local.email }}</p>
+    <p>Email подтвержден? {{ user.local.confirmed }}</p>
   </div>
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-      <button type="button" pButton icon="fa-close" label="Удалить"></button>
-      <button type="button" pButton icon="fa-check" label="Сохранить"></button>
-    </div>
-  </p-footer>
-</p-dialog>
+  <div *ngIf="user.google?.email">
+    <h4>Данные Google-аккаунта</h4>
+    <p>Имя: {{ user.google.name }}</p>
+    <p>Email: {{ user.google.email }}</p>
+  </div>
+</div>
 
+<button
+  pButton
+  type="button"
+  label="Назад"
+  (click)="back()"
+></button>
