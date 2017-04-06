@@ -20,7 +20,12 @@ const productSchema = new mongoose.Schema({
       type: Number,
       default: 0,
       min: [0, 'Price must be positive value']
+    },
+    category: {
+      type: String,
+      default: ''
     }
+
   },
   {timestamps: true}
 );

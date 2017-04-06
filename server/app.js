@@ -1,6 +1,3 @@
-/**
- * Module dependencies
- */
 const
   express = require('express'),
   path = require('path'),
@@ -37,7 +34,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 /**
- * Helmet configuration
+ * Helmet config
  */
 app.use(helmet(config.helmet));
 
@@ -83,7 +80,7 @@ app.use('/apidoc', express.static(path.resolve(__dirname, '../apidoc')));
 /**
  * Routes init
  */
-app.use(config.server.apiRoute, cors(), apiRoutes);
+app.use(config.server.apiRoute, cors(config.cors), apiRoutes);
 app.use('/*', index);
 
 /**

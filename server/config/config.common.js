@@ -56,6 +56,9 @@ const config = {
   },
   helmet: {
     hidePoweredBy: true
+  },
+  cors: {
+    maxAge: 600 //sec,
   }
 };
 config.server.callbackUrl = `${config.server.host}:${config.server.port}`;

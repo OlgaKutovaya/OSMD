@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 
-import { Message } from 'primeng/primeng';
+import { Message } from './message.interface';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -23,31 +23,34 @@ export class MessageService {
     });
   }
 
-  success(message: string, keepAfterNavigationChange = false): void {
+  success(message: string, keepAfterNavigationChange = false, timeout?: number): void {
     this.keepAfterNavigationChange = keepAfterNavigationChange;
     this.subject.next({
       severity: 'success',
-      detail: message
+      detail: message,
+      timeout
     });
   }
 
-  error(message: string, keepAfterNavigationChange = false): void {
+  error(message: string, keepAfterNavigationChange = false, timeout?: number): void {
     this.keepAfterNavigationChange = keepAfterNavigationChange;
     this.subject.next({
       severity: 'error',
-      detail: message
+      detail: message,
+      timeout
     });
   }
 
-  info(message: string, keepAfterNavigationChange = false): void {
+  info(message: string, keepAfterNavigationChange = false, timeout?: number): void {
     this.keepAfterNavigationChange = keepAfterNavigationChange;
     this.subject.next({
       severity: 'info',
-      detail: message
+      detail: message,
+      timeout
     });
   }
 
-  getMessage(): Observable<any> {
+  getMessage(): Observable<Message> {
     return this.subject.asObservable();
   }
 }

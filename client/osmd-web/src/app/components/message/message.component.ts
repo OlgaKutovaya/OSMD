@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { MessageService } from './message.service';
-import { Message } from 'primeng/primeng';
+import { Message } from './message.interface';
 import { Subscription } from 'rxjs/Subscription';
+
 
 @Component({
   selector: 'app-message',
@@ -13,6 +14,8 @@ export class MessageComponent implements OnInit, OnDestroy {
 
   private messageSubscription: Subscription;
   messages: Message[] = [];
+  defaultTimeout = 3000;
+  messageTimeout: number;
 
   constructor(private messageService: MessageService) {
   }
@@ -21,6 +24,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.messageSubscription = this.messageService.getMessage()
       .subscribe(message => {
         if (message) {
+          this.messageTimeout = message.timeout || this.defaultTimeout;
           this.messages.push(message);
         } else {
           this.messages = [];
