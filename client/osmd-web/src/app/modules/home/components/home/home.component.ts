@@ -1,5 +1,6 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 
+
 import { routerTransition } from 'app/shared';
 
 @Component({
@@ -15,6 +16,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
 }

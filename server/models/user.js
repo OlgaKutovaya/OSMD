@@ -94,13 +94,13 @@ userSchema.statics.createLocalUser = (user) => {
 };
 
 
-userSchema.statics.pagination = (skip, limit) => {
-  const userData = User.find()
+userSchema.statics.findUsersForAdmin = function (skip, limit) {
+  const userData = this.find()
     .select('+role')
     .skip(skip)
     .limit(limit)
     .lean();
-  const count = User.count();
+  const count = this.count();
 
   return Promise.all([userData, count]);
 };

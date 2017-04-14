@@ -2,8 +2,8 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 
 import { UserService } from 'app/services';
 import { routerTransition } from 'app/shared';
-import { SpinnerService } from 'app/components/spinner/spinner.service';
-import { MessageService } from 'app/components/message/message.service';
+import { SpinnerService } from '../../../../services/spinner.service';
+import { MessageService } from '../../../../services/message.service';
 
 
 export interface IProfile {

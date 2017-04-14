@@ -1,9 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Http, RequestOptions } from '@angular/http';
 
-import { AuthService, UserService, authHttpServiceFactory } from 'app/services';
-import { MessageService } from 'app/components/message/message.service';
-import { SpinnerService } from 'app/components/spinner/spinner.service';
+import {
+  MessageService,
+  SpinnerService,
+  DocumentService,
+  AuthService,
+  UserService,
+  ValidationService,
+  authHttpServiceFactory,
+  CategoryService
+} from 'app/services';
 import { AuthHttp } from 'angular2-jwt';
 import { config, apiUrl } from 'app/config';
 import {
@@ -18,11 +25,14 @@ import {
     ConfirmDialogModule
   ],
   providers: [
+    MessageService,
+    SpinnerService,
+    ConfirmationService,
     AuthService,
     UserService,
-    MessageService,
-    ConfirmationService,
-    SpinnerService,
+    CategoryService,
+    DocumentService,
+    ValidationService,
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

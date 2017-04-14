@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 
-import { Message } from './message.interface';
+import { Message } from '../components/message/message.interface';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -49,7 +49,6 @@ export class MessageService {
       timeout
     });
   }
-
   getMessage(): Observable<Message> {
     return this.subject.asObservable();
   }

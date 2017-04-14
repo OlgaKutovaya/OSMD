@@ -1,10 +1,4 @@
-/**
- * Module dependencies
- */
-
 const mongoose = require('../libs/mongoose');
-
-const ObjectId = mongoose.Schema.Types.ObjectId;
 
 /**
  * Purchase Schema
@@ -12,15 +6,15 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const purchaseSchema = new mongoose.Schema(
   {
-    userId: {
-      type: ObjectId,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User'
     },
-    productId: {
-      type: ObjectId,
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Product'
+      ref: 'Document'
     },
     price: {
       type: Number,
@@ -28,7 +22,7 @@ const purchaseSchema = new mongoose.Schema(
     },
     purchasedAt: {
       type: Date,
-      default: new Date()
+      default: new Date() // TODO: fix date setter
     }
   }
 );
@@ -39,19 +33,15 @@ const purchaseSchema = new mongoose.Schema(
 /**
  *
  * @param user:User
- * @param product:Product
+ * @param document:Document
  */
-purchaseSchema.statics.createPurchase = (user, product) => {
+purchaseSchema.statics.createPurchase = (user, document) => {
   return Purchase.create({
-    userId: user._id,
-    productId: product._id,
-    price: product.price
+    user: user._id,
+    documentId: document._id,
+    price: document.price
   });
 };
-
-/**
- * Init Purchase model
- */
 
 const Purchase = mongoose.model('Purchase', purchaseSchema);
 

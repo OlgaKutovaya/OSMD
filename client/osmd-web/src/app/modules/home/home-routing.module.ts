@@ -1,11 +1,18 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { HomeComponent } from './components';
+import { HomeComponent, CategoryPageComponent } from './components';
 
+
+const homeChildrenRoutes: Routes = [
+  { path: 'category/:id', component: CategoryPageComponent }
+];
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' }
+  {
+    path: '', component: HomeComponent, children: homeChildrenRoutes
+
+  }
 ];
 
 

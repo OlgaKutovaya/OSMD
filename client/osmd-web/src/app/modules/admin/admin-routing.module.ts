@@ -3,9 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 import {
   AdminComponent,
-  AdminUsersTableComponent,
-  AdminUserDetailsComponent,
-  AdminDocumentsTableComponent
+  UsersTableComponent,
+  UserDetailsComponent,
+  CategoriesTableComponent,
+  CategoryCreateUpdateComponent,
+  DocumentsTableComponent
 } from './components';
 import { AuthGuard, AdminGuard } from 'app/guards';
 
@@ -17,13 +19,22 @@ const routes: Routes = [
     canActivate: [ AuthGuard, AdminGuard ],
     children: [
       {
-        path: 'users', component: AdminUsersTableComponent
+        path: 'users', component: UsersTableComponent
       },
       {
-        path: 'users/:id', component: AdminUserDetailsComponent
+        path: 'users/:id', component: UserDetailsComponent
       },
       {
-        path: 'documents', component: AdminDocumentsTableComponent
+        path: 'categories', component: CategoriesTableComponent
+      },
+      {
+        path: 'categories/edit/:id', component: CategoryCreateUpdateComponent
+      },
+      {
+        path: 'categories/add', component: CategoryCreateUpdateComponent
+      },
+      {
+        path: 'documents', component: DocumentsTableComponent
       },
       {
         path: '', pathMatch: 'full', redirectTo: 'users'

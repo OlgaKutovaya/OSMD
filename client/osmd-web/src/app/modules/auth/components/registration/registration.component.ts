@@ -3,16 +3,15 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { AuthService, ValidationService, emailValidator, matchingPassword } from 'app/services';
-import { routerTransition, User } from 'app/shared';
-import { MessageService } from 'app/components/message/message.service';
+import { routerTransition, RegUser } from 'app/shared';
+import { MessageService } from '../../../../services/message.service';
 
 
 @Component({
   selector: 'app-registration',
   templateUrl: 'registration.component.html',
   styleUrls: [ 'registration.component.sass' ],
-  animations: [ routerTransition() ],
-  providers: [ ValidationService ]
+  animations: [ routerTransition() ]
 })
 export class RegistrationComponent {
   @HostBinding('@routerTransition') routerTransition;
@@ -78,7 +77,7 @@ export class RegistrationComponent {
   }
 
   onRegistration(values): void {
-    const user = new User();
+    const user = new RegUser();
     user.username = values.username.trim();
     user.email = values.email.trim();
     user.password = values.password.trim();

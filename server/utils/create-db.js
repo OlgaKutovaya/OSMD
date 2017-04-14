@@ -57,7 +57,7 @@ mongoose.connection.dropDatabase()
   .then(() => log('Db dropped OK'))
   .then(() => {
     User = require('../models/user');
-    Product = require('../models/product');
+    Product = require('../models/document');
     log(chalk.green('Models created OK'));
     return Promise.all(
       Object.keys(mongoose.models)

@@ -4,15 +4,15 @@ import { Location } from '@angular/common';
 
 import { User } from '../../models/user.model';
 import { UserService } from 'app/services';
-import { SpinnerService } from 'app/components/spinner/spinner.service';
-import { MessageService } from 'app/components/message/message.service';
+import { SpinnerService } from '../../../../services/spinner.service';
+import { MessageService } from '../../../../services/message.service';
 
 @Component({
   selector: 'app-admin-user-details',
-  templateUrl: 'admin-user-details.component.html',
-  styleUrls: [ 'admin-user-details.component.sass' ]
+  templateUrl: 'user-details.component.html',
+  styleUrls: [ 'user-details.component.sass' ]
 })
-export class AdminUserDetailsComponent implements OnInit {
+export class UserDetailsComponent implements OnInit {
   userId: string;
   user: User;
 

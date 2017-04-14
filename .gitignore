@@ -1,6 +1,8 @@
 .idea/
 node_modules/
+UploadedFiles/
 npm-debug.log*
 *.log
 /apidoc/
 dist/
+/*test*

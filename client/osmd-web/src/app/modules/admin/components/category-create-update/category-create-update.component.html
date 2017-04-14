@@ -1,0 +1,56 @@
+<div *ngIf="fetched">
+  <h3>{{ currentCategory._id?'Изменение категории':'Добавление категории' }}</h3>
+  <form [formGroup]="categoryForm" novalidate>
+    <div class="form-group">
+      <label for="title" class="form-helper">Название</label>
+      <input
+        pInputText
+        class="form-control"
+        id="title"
+        type="text"
+        formControlName="name"
+      >
+    </div>
+    <div class="form-group">
+      <label for="label" class="form-helper">Метка</label>
+      <input
+        pInputText
+        class="form-control"
+        id="label"
+        type="text"
+        formControlName="label"
+      >
+    </div>
+    <div class="form-group">
+      <label for="description" class="form-helper">Описание</label>
+      <textarea
+        pInputTextarea
+        class="form-control"
+        id="description"
+        type="text"
+        formControlName="description"
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label>Видимость</label>
+      <p-checkbox
+        formControlName="visible"
+        class="form-control"
+        binary="true"
+      ></p-checkbox>
+    </div>
+    <div class="form-actions">
+      <button
+        pButton
+        label="Сохранить"
+        (click)="save()"
+      ></button>
+      <button
+        pButton
+        label="Отмена"
+        (click)="back()"
+      ></button>
+    </div>
+  </form>
+</div>
+

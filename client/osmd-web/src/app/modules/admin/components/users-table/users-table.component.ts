@@ -1,23 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { User } from '../../models';
-import { UserService } from 'app/services';
-import { SpinnerService } from 'app/components/spinner/spinner.service';
+import { User } from 'app/shared';
 import { ConfirmationService, LazyLoadEvent } from 'primeng/primeng';
-import { MessageService } from 'app/components/message/message.service';
+import { MessageService, SpinnerService, UserService } from 'app/services';
+
+export interface IUserTableColumn {
+  field: string;
+  header: string;
+}
 
 @Component({
   selector: 'app-admin-users',
-  templateUrl: 'admin-users-table.component.html',
-  styleUrls: [ 'admin-users-table.component.sass' ]
+  templateUrl: 'users-table.component.html',
+  styleUrls: [ 'users-table.component.sass' ]
 })
-export class AdminUsersTableComponent implements OnInit {
+export class UsersTableComponent implements OnInit {
   users: User[];
   totalRecords: number;
   paginationSkip: number;
   paginationLimit: number;
-  columns: any[] = [
+  columns: IUserTableColumn[] = [
     { field: 'local.email', header: 'Email' },
     { field: 'local.username', header: 'Имя' }
   ];
@@ -40,7 +43,7 @@ export class AdminUsersTableComponent implements OnInit {
   }
 
   getUsersPagination(skip, limit) {
-    this.userService.getAllUsers(skip, limit)
+    this.userService.getAllUsersForAdmin(skip, limit)
       .subscribe(
         (res) => {
           this.spinnerService.hide();

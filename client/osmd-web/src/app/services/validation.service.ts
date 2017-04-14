@@ -26,6 +26,13 @@ export class ValidationService {
     }
     return formErrors;
   }
+
+  priceValidator(control: FormControl): { [s: string]: boolean } {
+    const price = control.value;
+    if (isNaN(price) || price < 0) {
+      return { 'invalidPrice': true };
+    }
+  }
 }
 
 export function emailValidator(control: FormControl): { [s: string]: boolean } {
@@ -33,6 +40,7 @@ export function emailValidator(control: FormControl): { [s: string]: boolean } {
   if (!validator.isEmail(value)) {
     return { 'invalidEmail': true };
   }
+  return null;
 }
 
 export function matchingPassword(passwordKey: string, passwordConfKey: string) {

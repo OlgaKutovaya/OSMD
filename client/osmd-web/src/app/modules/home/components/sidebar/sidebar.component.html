@@ -1,18 +1,14 @@
-<p-accordion [multiple]="true">
-  <p-accordionTab header="Инструкции">
-    <ul>
-      <li>
-        <a href="#">Первые шаги</a>
-      </li>
-      <li>
-        <a href="#">Как начать управлять</a>
+<p-accordion multiple="true">
+  <p-accordionTab *ngFor="let category of categories">
+    <p-header>
+      {{ category.name }}
+    </p-header>
+    <ul *ngFor="let child of category.children">
+      <li
+        (click)="onCategoryClick(child)"
+      >
+        {{ child.name}}
       </li>
     </ul>
-  </p-accordionTab>
-  <p-accordionTab header="Создание ОСМД">
-
-  </p-accordionTab>
-  <p-accordionTab header="Решения горсовета">
-
   </p-accordionTab>
 </p-accordion>

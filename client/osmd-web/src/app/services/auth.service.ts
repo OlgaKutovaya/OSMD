@@ -2,28 +2,25 @@ import { Injectable, Inject } from '@angular/core';
 import { RequestOptions, Http, Headers, Response } from '@angular/http';
 
 import { tokenNotExpired, AuthConfig, AuthHttp } from 'angular2-jwt';
-import { User } from 'app/shared';
+import { RegUser } from 'app/shared';
 import { apiUrl } from 'app/config';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
 
 
 @Injectable()
 export class AuthService {
   authToken: string;
   user: any;
+  private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http,
               @Inject(apiUrl) private apiUrl: string) {
     this.loadToken();
   }
 
-  registration(user: User): Observable<any> {
+  registration(user: RegUser): Observable<any> {
     console.log(user);
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers });
+    const options = new RequestOptions({ headers: this.headers });
     return this.http.post(`${this.apiUrl}/users/registration`, user, options)
       .map((res: Response) => res.json())
       .catch(this.handleError);
@@ -31,8 +28,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     const data = { email, password };
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers });
+    const options = new RequestOptions({ headers: this.headers });
     return this.http.post(`${this.apiUrl}/users/login`, data, options)
       .map((res: Response) => res.json())
       .catch(this.handleError);
@@ -60,8 +56,6 @@ export class AuthService {
     this.authToken = token;
     this.user = user;
   }
-
-
 
 
   handleError(err: Response): Observable<any> {

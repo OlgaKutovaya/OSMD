@@ -1,7 +1,3 @@
-/**
- * Module dependencies
- */
-
 const
   router = require('express').Router(),
   User = require('../../models/user'),
@@ -82,17 +78,7 @@ const
  }
 
  */
-router.get('/', passportJwtAuth, checkAdmin, (req, res, next) => {
-  const {skip = 0, limit = 10} = req.query;
-  User.pagination(parseInt(skip), parseInt(limit))
-    .spread((users, count) => {
-      res.json({
-        users: users,
-        count: count
-      });
-    }).catch(err => next(err));
 
-});
 
 router.delete('/:id', checkMongoId, passportJwtAuth, checkAdmin, (req, res, next) => {
   const userId = req.params.id;

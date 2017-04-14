@@ -1,0 +1,61 @@
+<p-dataTable
+  [value]="categories"
+  [rows]="10"
+  [resizableColumns]="true"
+  [rowsPerPageOptions]="[5,10,20,100]"
+  [paginator]="true"
+  selectionMode="single"
+  [(selection)]="selectedCategory"
+  [responsive]="true"
+  (onRowSelect)="onRowSelect($event)"
+>
+  <p-header>Список главных категорий</p-header>
+  <p-column
+    *ngFor="let col of columns"
+    [field]="col.field"
+    [header]="col.header"
+    [sortable]="true"
+  ></p-column>
+  <p-column
+    styleClass="actions-column"
+    [sortable]="true"
+  >
+    <template pTemplate="header">
+      Видимость
+    </template>
+    <template let-category="rowData" pTemplate="body">
+      {{ category.visible?'Видимая':'Скрытая' }}
+    </template>
+  </p-column>
+  <p-column styleClass="actions-column">
+    <template pTemplate="header">
+      Действия
+    </template>
+    <template let-category="rowData" pTemplate="body" class="actions-column">
+      <button
+        pButton
+        type="button"
+        icon="fa-pencil"
+        class="ui-button-warning"
+        (click)="editCategory(category)"
+      ></button>
+      <button
+        pButton
+        type="button"
+        icon="fa-trash"
+        class="ui-button-danger"
+        (click)="deleteCategory(category)"
+      ></button>
+    </template>
+  </p-column>
+  <p-footer class="table-footer">
+    <button
+      pButton
+      type="button"
+      class="ui-button-primary"
+      label="Добавить"
+      (click)="addCategory()"
+    ></button>
+    <span>Всего категорий в базе: {{ categories.length }}</span>
+  </p-footer>
+</p-dataTable>

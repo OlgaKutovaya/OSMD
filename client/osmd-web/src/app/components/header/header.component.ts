@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { ConfirmationService } from 'primeng/primeng';
 import { AuthService } from 'app/services';
-import { MessageService } from '../message/message.service';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-header',

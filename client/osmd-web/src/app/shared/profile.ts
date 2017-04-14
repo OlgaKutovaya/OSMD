@@ -11,6 +11,4 @@ export class Profile {
   };
   role: string[];
   createdAt: Date;
-  updatedAt: Date;
-
 }

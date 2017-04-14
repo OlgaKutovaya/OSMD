@@ -1,0 +1,42 @@
+<p-dataTable
+  [value]="documents"
+  [rows]="10"
+  [resizableColumns]="true"
+  [rowsPerPageOptions]="[5,10,20,100]"
+  [paginator]="true"
+  [lazy]="true"
+  selectionMode="single"
+  [(selection)]="selectedDocument"
+  [totalRecords]="totalRecords"
+  [responsive]="true"
+  (onRowSelect)="onRowSelect($event)"
+  (onLazyLoad)="loadDocumentsLazy($event)"
+>
+  <p-header>Список документов</p-header>
+  <p-column styleClass="actions-column">
+    <template pTemplate="header">
+      №
+    </template>
+    <template let-ri="rowIndex" pTemplate="body">
+      {{ ri+1 }}
+    </template>
+  </p-column>
+  <p-column
+    *ngFor="let col of columns"
+    [field]="col.field"
+    [header]="col.header"
+    [sortable]="true"
+  ></p-column>
+  <p-footer class="table-footer">
+    <button
+      pButton
+      type="button"
+      class="ui-button-primary"
+      label="Добавить"
+      (click)="showCreationDialog()"
+    ></button>
+    <span>Всего документов в базе: {{ totalRecords }}</span>
+  </p-footer>
+</p-dataTable>
+<app-document-form></app-document-form>
+

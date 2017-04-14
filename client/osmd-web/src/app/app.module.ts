@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent, MessageComponent, PageNotFoundComponent, SpinnerComponent } from './components';
 import { AdminModule, AuthModule, CommonModule, HomeModule, ProfileModule } from './modules';
 import { AppRoutingModule } from './app-routing.module';
+import './rxjs-imports';
 
 @NgModule({
   declarations: [

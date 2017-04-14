@@ -4,14 +4,13 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { ValidationService, emailValidator, AuthService } from 'app/services';
 import { routerTransition } from 'app/shared';
-import { MessageService } from 'app/components/message/message.service';
+import { MessageService } from '../../../../services/message.service';
 
 @Component({
   selector: 'app-authentication',
   templateUrl: 'authentication.component.html',
   styleUrls: [ 'authentication.component.sass' ],
-  animations: [ routerTransition() ],
-  providers: [ ValidationService ]
+  animations: [ routerTransition() ]
 })
 export class AuthenticationComponent {
   @HostBinding('@routerTransition') routerTransition;
