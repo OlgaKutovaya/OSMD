@@ -18,7 +18,7 @@ export class HeaderComponent {
               private router: Router) {
   }
 
-  onLogout(): void {
+  onLogout() {
     this.confirmationService.confirm({
       message: 'Вы уверены, что хотите выйти?',
       icon: 'fa fa-question-circle',

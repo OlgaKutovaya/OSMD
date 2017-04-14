@@ -4,8 +4,11 @@ import { RequestOptions, Http, Headers, Response } from '@angular/http';
 import { tokenNotExpired, AuthConfig, AuthHttp } from 'angular2-jwt';
 import { RegUser } from 'app/shared';
 import { apiUrl } from 'app/config';
+import { MessageService } from 'app/services';
 import { Observable } from 'rxjs/Observable';
-
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +17,7 @@ export class AuthService {
   private headers = new Headers({ 'Content-Type': 'application/json' });
 
   constructor(private http: Http,
+              private messageService: MessageService,
               @Inject(apiUrl) private apiUrl: string) {
     this.loadToken();
   }
@@ -31,7 +35,7 @@ export class AuthService {
     const options = new RequestOptions({ headers: this.headers });
     return this.http.post(`${this.apiUrl}/users/login`, data, options)
       .map((res: Response) => res.json())
-      .catch(this.handleError);
+      .catch((err) => this.handleError(err));
   }
 
 

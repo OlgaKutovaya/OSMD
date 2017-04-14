@@ -1,39 +1,41 @@
-<div class="header-logo">Logo</div>
-<nav class="header-navigation">
-  <a
-    [routerLink]="['/']"
-    [routerLinkActive]="['active']"
-    [routerLinkActiveOptions]="{ exact: true }"
-    class="navigation-link"
-  >Домой</a>
+<div class="ui-g">
+  <div class="ui-g-12 ui-md-2">Logo</div>
+  <nav class="ui-g-12 ui-md-10 header-navigation">
+    <a
+      [routerLink]="['/']"
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="navigation-link"
+    >Домой</a>
 
-  <a
-    [routerLink]="['/donate']"
-    [routerLinkActive]="['active']"
-    class="navigation-link"
-  >Помощь проекту</a>
-  <a
-    *ngIf="!authService.loggedIn()"
-    [routerLink]="['/login']"
-    [routerLinkActive]="['active']"
-    class="navigation-link"
-  >Войти</a>
-  <a
-    *ngIf="!authService.loggedIn()"
-    [routerLink]="['/registration']"
-    [routerLinkActive]="['active']"
-    class="navigation-link"
-  >Регистрация</a>
-  <a
-    *ngIf="authService.loggedIn()"
-    [routerLink]="['/profile']"
-    [routerLinkActive]="['active']"
-    class="navigation-link"
-  >Профиль</a>
-  <a
-    *ngIf="authService.loggedIn()"
-    href="/logout"
-    class="navigation-link"
-    (click)="onLogout();$event.preventDefault()"
-  >Выйти</a>
-</nav>
+    <a
+      [routerLink]="['/donate']"
+      [routerLinkActive]="['active']"
+      class="navigation-link"
+    >Помощь проекту</a>
+    <a
+      *ngIf="!authService.loggedIn()"
+      [routerLink]="['/login']"
+      [routerLinkActive]="['active']"
+      class="navigation-link"
+    >Войти</a>
+    <a
+      *ngIf="!authService.loggedIn()"
+      [routerLink]="['/registration']"
+      [routerLinkActive]="['active']"
+      class="navigation-link"
+    >Регистрация</a>
+    <a
+      *ngIf="authService.loggedIn()"
+      [routerLink]="['/profile']"
+      [routerLinkActive]="['active']"
+      class="navigation-link"
+    >Профиль</a>
+    <a
+      *ngIf="authService.loggedIn()"
+      href="/logout"
+      class="navigation-link"
+      (click)="onLogout();$event.preventDefault()"
+    >Выйти</a>
+  </nav>
+</div>

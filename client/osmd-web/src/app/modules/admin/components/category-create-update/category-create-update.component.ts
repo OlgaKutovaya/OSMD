@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CategoryService, MessageService, SpinnerService } from 'app/services';
 import { Category } from 'app/shared';
+import { ConfirmationService } from 'primeng/primeng';
 
 @Component({
   selector: 'app-category-create-update',
@@ -28,9 +28,10 @@ export class CategoryCreateUpdateComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private categoryService: CategoryService,
               private formBuilder: FormBuilder,
+              private confirmationService: ConfirmationService,
               private messageService: MessageService,
               private spinnerService: SpinnerService,
-              private location: Location) {
+              private router: Router) {
     this
       .createForm();
   }
@@ -38,6 +39,13 @@ export class CategoryCreateUpdateComponent implements OnInit {
   ngOnInit() {
     this.spinnerService.show();
     this.getCategoryIdFromRoute();
+  }
+
+  getTitle() {
+    if (this.currentCategory && this.currentCategory._id) {
+      return `Изменение категории "${this.currentCategory.name}"`;
+    }
+    return 'Добавление новой категории';
   }
 
   createForm() {
@@ -74,7 +82,7 @@ export class CategoryCreateUpdateComponent implements OnInit {
             (err) => {
               console.log(err);
               this.spinnerService.hide();
-              this.location.back();
+              this.backToCategories();
             }
           );
       } else {
@@ -85,28 +93,57 @@ export class CategoryCreateUpdateComponent implements OnInit {
     });
   }
 
-  save() {
+  saveCategory() {
     if (this.currentCategory._id) {
       this.categoryService.updateCategory(this.currentCategory._id, this.categoryForm.value).subscribe(
         () => {
           this.messageService.success('Категория успешно обновлена.', true);
-          this.back();
+          this.backToCategories();
         },
         (err) => console.log(err)
       );
     } else {
       this.categoryService.addCategory(this.categoryForm.value).subscribe(
         () => {
-          this.messageService.success('Категория успешно создана.', true);
-          this.back();
+          this.messageService.success('Категория успешно добавлена.', true);
+          this.backToCategories();
         },
         (err) => console.log(err)
       );
     }
   }
 
-  back() {
-    this.location.back();
+  backToCategories() {
+    this.router.navigate([ 'admin/categories' ]);
+  }
+
+  confirmDelete() {
+    if (this.currentCategory._id) {
+      this.confirmationService.confirm({
+        message: 'Удалить данную категорию?',
+        icon: 'fa fa-question-circle',
+        header: 'Удаление категории',
+        key: 'confirm',
+        accept: () => {
+          this.deleteCategory();
+        }
+      });
+    }
+  }
+
+  deleteCategory() {
+    this.categoryService.deleteCategory(this.currentCategory._id)
+      .subscribe(
+        (category) => {
+          console.log(category);
+          this.messageService.success('Категория успешно удалена.', true);
+          this.backToCategories();
+        },
+        (err) => {
+          console.log(err);
+          this.backToCategories();
+        }
+      );
   }
 
 }

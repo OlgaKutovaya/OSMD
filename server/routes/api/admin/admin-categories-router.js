@@ -6,7 +6,7 @@ const {categoryValidator, objectIdValidator} = require('../../../utils/validatio
 router.get('/', (req, res, next) => {
   Category.findCategoriesForAdmin()
     .then(categories => {
-      res.json(categories);
+      return res.json(categories);
     }).catch(err => next(err));
 });
 
@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
   // TODO: validation
   Category.createCategory(req.body)
     .then(category => {
-      res.json(category);
+      return res.json(category);
     }).catch(err => next(err));
 
 });
@@ -35,13 +35,6 @@ router.get('/:id', checkMongoId, (req, res, next) => {
     }).catch(err => next(err));
 });
 
-router.delete('/:id', checkMongoId, (req, res, next) => {
-  Category.deleteCategoryById(req.params.id)
-    .then(result => {
-      res.json(result);
-    }).catch(err => next(err));
-});
-
 
 router.put('/:id', checkMongoId, (req, res, next) => {
   const newCategory = req.body;
@@ -52,9 +45,21 @@ router.put('/:id', checkMongoId, (req, res, next) => {
           message: 'Категория не найдена'
         });
       }
-      res.json(category);
+      return res.json(category);
     }).catch(err => next(err));
 
+});
+
+router.delete('/:id', checkMongoId, (req, res, next) => {
+  Category.deleteCategoryById(req.params.id)
+    .then(result => {
+      if (!result) {
+        return res.status(404).json({
+          message: 'Категория не найдена.'
+        });
+      }
+      return res.json(result);
+    }).catch(err => next(err));
 });
 
 module.exports = router;

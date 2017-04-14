@@ -1,41 +1,44 @@
 <div *ngIf="fetched">
-  <h3>{{ currentCategory._id?'Изменение категории':'Добавление категории' }}</h3>
-  <form [formGroup]="categoryForm" novalidate>
-    <div class="form-group">
-      <label for="title" class="form-helper">Название</label>
+  <h3>{{ getTitle() }}</h3>
+  <form
+    [formGroup]="categoryForm"
+    class="ui-g"
+    novalidate
+  >
+    <div class="ui-g-12">
+      <label for="title">Название</label>
       <input
         pInputText
-        class="form-control"
+        class="ui-g-12"
         id="title"
         type="text"
         formControlName="name"
       >
     </div>
-    <div class="form-group">
+    <div class="ui-g-12">
       <label for="label" class="form-helper">Метка</label>
       <input
         pInputText
-        class="form-control"
+        class="ui-g-12"
         id="label"
         type="text"
         formControlName="label"
       >
     </div>
-    <div class="form-group">
+    <div class="ui-g-12">
       <label for="description" class="form-helper">Описание</label>
       <textarea
         pInputTextarea
-        class="form-control"
+        class="ui-g-12"
         id="description"
         type="text"
         formControlName="description"
       ></textarea>
     </div>
-    <div class="form-group">
+    <div class="ui-g-12">
       <label>Видимость</label>
       <p-checkbox
         formControlName="visible"
-        class="form-control"
         binary="true"
       ></p-checkbox>
     </div>
@@ -43,14 +46,26 @@
       <button
         pButton
         label="Сохранить"
-        (click)="save()"
+        (click)="saveCategory()"
       ></button>
       <button
         pButton
         label="Отмена"
-        (click)="back()"
+        (click)="backToCategories()"
+      ></button>
+      <button
+        *ngIf="currentCategory._id"
+        class="ui-button-danger"
+        pButton
+        label="Удалить"
+        (click)="confirmDelete()"
       ></button>
     </div>
   </form>
+  <div *ngIf="currentCategory.children?.length">
+    <ul *ngFor="let child of currentCategory.children">
+      <li>{{ child.name }}</li>
+    </ul>
+  </div>
 </div>
 

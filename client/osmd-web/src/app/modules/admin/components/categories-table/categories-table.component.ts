@@ -53,7 +53,4 @@ export class CategoriesTableComponent implements OnInit {
     this.router.navigate([ 'edit', category._id ], { relativeTo: this.route });
   }
 
-  deleteCategory(category) {
-    console.log(category);
-  }
 }

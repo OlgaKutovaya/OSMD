@@ -80,7 +80,8 @@ categorySchema.statics.findCategoryById = function (id) {
 // ============ ADMIN METHODS===============
 
 categorySchema.statics.findCategoriesForAdmin = function () {
-  return this.find({parent: null});
+  return this.find()
+    .sort({order: 1, parent: 1});
 };
 
 categorySchema.statics.findCategoryByIdForAdmin = function (id) {
@@ -94,7 +95,7 @@ categorySchema.statics.createCategory = function (newCategory) {
   return this.create(newCategory);
 };
 
-categorySchema.statics.removeCategoryById = function (id) {
+categorySchema.statics.deleteCategoryById = function (id) {
   return this.findByIdAndRemove(id);
 };
 
