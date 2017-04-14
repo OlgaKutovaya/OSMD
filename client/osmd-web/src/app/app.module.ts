@@ -3,8 +3,14 @@ import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent, MessageComponent, PageNotFoundComponent, SpinnerComponent } from './components';
-import { AdminModule, AuthModule, CommonModule, HomeModule, ProfileModule } from './modules';
+import {
+  HeaderComponent,
+  MessageComponent,
+  SpinnerComponent,
+  PageNotFoundComponent
+} from './components';
+import { ServiceModule, PublicModule, AdminModule } from './modules';
+import { ConfirmDialogModule, GrowlModule } from 'primeng/primeng';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -18,14 +24,14 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [
     HttpModule,
     BrowserModule,
-    CommonModule,
-    HomeModule,
-    ProfileModule,
-    AuthModule,
+    ServiceModule,
+    ConfirmDialogModule,
+    GrowlModule,
+    PublicModule,
     AdminModule,
     AppRoutingModule
   ],
-  providers: [], // look "modules/common/common.module.ts"
+  providers: [], // look "modules/service-module/service.module.ts"
   bootstrap: [ AppComponent ]
 })
 export class AppModule {

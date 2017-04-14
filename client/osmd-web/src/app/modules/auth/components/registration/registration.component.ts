@@ -1,20 +1,23 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { AuthService, ValidationService, emailValidator, matchingPassword } from 'app/services';
-import { routerTransition, RegUser } from 'app/shared';
-import { MessageService } from '../../../../services/message.service';
+import {
+  MessageService,
+  AuthService,
+  ValidationService,
+  emailValidator,
+  matchingPassword
+} from 'app/services';
+import { RegUser } from 'app/shared';
 
 
 @Component({
   selector: 'app-registration',
   templateUrl: 'registration.component.html',
-  styleUrls: [ 'registration.component.sass' ],
-  animations: [ routerTransition() ]
+  styleUrls: [ 'registration.component.sass' ]
 })
 export class RegistrationComponent {
-  @HostBinding('@routerTransition') routerTransition;
   regForm: FormGroup;
   formErrors: any = {
     'username': '',

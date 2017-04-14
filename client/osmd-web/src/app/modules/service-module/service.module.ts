@@ -11,22 +11,17 @@ import {
   authHttpServiceFactory,
   CategoryService
 } from 'app/services';
+import { AuthGuard } from 'app/guards';
 import { AuthHttp } from 'angular2-jwt';
 import { config, apiUrl } from 'app/config';
-import {
-  ConfirmationService,
-  GrowlModule,
-  ConfirmDialogModule,
-} from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/primeng';
 
 @NgModule({
-  imports: [
-    GrowlModule,
-    ConfirmDialogModule
-  ],
+  imports: [],
   providers: [
     MessageService,
     SpinnerService,
+    AuthGuard,
     ConfirmationService,
     AuthService,
     UserService,
@@ -43,10 +38,7 @@ import {
       useValue: config.apiUrl
     }
   ],
-  exports: [
-    GrowlModule,
-    ConfirmDialogModule
-  ]
+  exports: []
 })
-export class CommonModule {
+export class ServiceModule {
 }

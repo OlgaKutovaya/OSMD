@@ -33,7 +33,8 @@ export class CategoriesTableComponent implements OnInit {
     this.categoryService.getCategoriesForAdmin()
       .subscribe(
         (categories) => {
-          this.categories = categories;
+          // this.categories = categories;
+          this.formatNestedCategories(categories);
         },
         (err) => {
           console.log(err);
@@ -41,8 +42,22 @@ export class CategoriesTableComponent implements OnInit {
       );
   }
 
-  onRowSelect(event) {
-    console.log(event);
+  formatNestedCategories(categories: Category[]) {
+    const result = [];
+    for (const category of categories) {
+      if (!category.parent) {
+        result.push(category);
+        if (category.children && category.children.length) {
+          category.children.forEach(child => {
+            result.push(child);
+          });
+        }
+      }
+    }
+    this.categories = result;
+  }
+
+  onRowSelect() {
   }
 
   addCategory() {

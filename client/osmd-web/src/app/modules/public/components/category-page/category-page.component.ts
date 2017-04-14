@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { CategoryService } from 'app/services';
 import { Category } from 'app/shared';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 
@@ -16,21 +16,31 @@ export class CategoryPageComponent implements OnInit {
   categoryId: string;
 
   constructor(private categoryService: CategoryService,
+              private router: Router,
               private route: ActivatedRoute) {
+
   }
 
   ngOnInit() {
-    this.route.params.map(params => {
+    this.route.params.subscribe(params => {
       this.categoryId = params[ 'id' ];
-      return this.categoryId;
-    }).switchMap((id) => {
-      return this.categoryService.getCategory(id);
-    }).subscribe(
-      (category) => {
-        this.category = category;
-      },
-      (err) => console.log(err)
-    );
+      this.getCategory();
+    });
+  }
+
+  getCategory() {
+    if (this.categoryId) {
+      this.categoryService.getCategory(this.categoryId)
+        .subscribe(
+          (category) => {
+            this.category = category;
+          },
+          (err) => {
+            console.log(err);
+            this.router.navigate([ '/' ]);
+          }
+        );
+    }
   }
 
 }

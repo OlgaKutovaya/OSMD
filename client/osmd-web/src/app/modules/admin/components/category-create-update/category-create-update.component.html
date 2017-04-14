@@ -4,6 +4,7 @@
     [formGroup]="categoryForm"
     class="ui-g"
     novalidate
+    (ngSubmit)="saveCategory()"
   >
     <div class="ui-g-12">
       <label for="title">Название</label>
@@ -45,8 +46,8 @@
     <div class="form-actions">
       <button
         pButton
+        type="submit"
         label="Сохранить"
-        (click)="saveCategory()"
       ></button>
       <button
         pButton
@@ -63,8 +64,8 @@
     </div>
   </form>
   <div *ngIf="currentCategory.children?.length">
-    <ul *ngFor="let child of currentCategory.children">
-      <li>{{ child.name }}</li>
+    <ul>
+      <li *ngFor="let child of currentCategory.children">{{ child.name }}</li>
     </ul>
   </div>
 </div>

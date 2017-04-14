@@ -17,8 +17,13 @@ router.get('/tree', (req, res, next) => {
 
 router.get('/:id', checkMongoId, (req, res, next) => {
   Category.findCategoryById(req.params.id)
-    .then(categories => {
-      res.json(categories);
+    .then(category => {
+      if (category && category.length) {
+        return res.json(category[0]);
+      }
+      return res.status(404).json({
+        message: 'Категория не найдена'
+      });
     }).catch(err => next(err));
 });
 

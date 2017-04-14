@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
-  templateUrl: 'sidebar.component.html',
-  styleUrls: [ 'sidebar.component.sass' ]
+  templateUrl: './sidebar.component.html',
+  styleUrls: [ './sidebar.component.sass' ]
 })
 export class SidebarComponent implements OnInit {
 
@@ -31,7 +31,11 @@ export class SidebarComponent implements OnInit {
   }
 
   onCategoryClick(category) {
-    console.log(category);
     this.router.navigate([ 'category', category._id ]);
+  }
+
+  onRootCategoryClick(event) {
+    const index = event.index;
+    this.router.navigate([ 'category', this.categories[ index ]._id ]);
   }
 }

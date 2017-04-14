@@ -1,7 +1,6 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { MessageService, SpinnerService, UserService } from 'app/services';
-import { routerTransition } from 'app/shared';
 
 
 export interface IProfile {
@@ -21,11 +20,10 @@ export interface IProfile {
 @Component({
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
-  styleUrls: [ 'profile.component.sass' ],
-  animations: [ routerTransition() ]
+  styleUrls: [ 'profile.component.sass' ]
+
 })
 export class ProfileComponent implements OnInit {
-  @HostBinding('@routerTransition') routerTransition;
   profile: IProfile;
   loading: boolean;
   sendingEmail: boolean;

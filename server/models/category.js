@@ -41,38 +41,89 @@ categorySchema.statics.findCategories = function () {
 
 
 categorySchema.statics.getCategoriesTree = function () {
-  return this.aggregate()
-    .match({parent: null, visible: true})
-    .lookup({from: 'categories', localField: '_id', foreignField: 'parent', as: 'children'})
-    .project({
-      'label': 1,
-      'name': 1,
-      'children._id': 1,
-      'children.label': 1,
-      'children.name': 1
-    });
+  return this.aggregate([
+    {
+      $match: {
+        'parent': null
+      }
+    },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: '_id',
+        foreignField: 'parent',
+        as: 'children'
+      }
+    },
+    {
+      $redact: {
+        $cond: {
+          if: {
+            $eq: ['$visible', true]
+          },
+          then: '$$DESCEND',
+          else: '$$PRUNE'
+        }
+      }
+    },
+    {
+      $project: {
+        '_id': 1,
+        'label': 1,
+        'name': 1,
+        'children._id': 1,
+        'children.label': 1,
+        'children.name': 1
+      }
+    }
+  ]);
 };
 
 categorySchema.statics.findCategoryById = function (id) {
 
-  return this.aggregate()
-    .match({_id: new mongoose.Types.ObjectId(id)})
-    .lookup({from: 'documents', localField: '_id', foreignField: 'category', as: 'documents'})
-    .project({
-      'label': 1,
-      'name': 1,
-      'description': 1,
-      'picture': 1,
-      'documents': {
-        $filter: {
-          input: '$documents',
-          as: 'document',
-          cond: {
-            '$eq': ['$$document.visible', true]
-          }
+  return this.aggregate([
+    {
+      $match: {
+        '_id': new mongoose.Types.ObjectId(id),
+        'visible': true
+      }
+    },
+    {
+      $limit: 1
+    },
+    {
+      $lookup: {
+        from: 'documents',
+        localField: '_id',
+        foreignField: 'category',
+        as: 'documents'
+      }
+    },
+    {
+      $redact: {
+        $cond: {
+          if: {
+            $eq: ['$visible', true]
+          },
+          then: '$$DESCEND',
+          else: '$$PRUNE'
         }
       }
-    });
+    },
+    {
+      $project: {
+        '_id': 1,
+        'name': 1,
+        'label': 1,
+        'documents._id': 1,
+        'documents.title': 1,
+        'documents.label': 1,
+        'documents.description': 1,
+        'documents.price': 1,
+        'documents.tags': 1,
+      }
+    }
+  ]);
 };
 // ============ PUBLIC METHODS END===============
 
@@ -80,13 +131,15 @@ categorySchema.statics.findCategoryById = function (id) {
 // ============ ADMIN METHODS===============
 
 categorySchema.statics.findCategoriesForAdmin = function () {
-  return this.find()
-    .sort({order: 1, parent: 1});
+  return this.aggregate()
+    .match({parent: null})
+    .lookup({from: 'categories', localField: '_id', foreignField: 'parent', as: 'children'});
 };
 
 categorySchema.statics.findCategoryByIdForAdmin = function (id) {
   return this.aggregate()
     .match({_id: new mongoose.Types.ObjectId(id)})
+    .limit(1)
     .lookup({from: 'categories', localField: '_id', foreignField: 'parent', as: 'children'})
     .lookup({from: 'documents', localField: '_id', foreignField: 'category', as: 'documents'});
 };

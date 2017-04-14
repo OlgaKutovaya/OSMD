@@ -1,16 +1,13 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
-
-import { routerTransition } from 'app/shared';
+import { Component, OnInit } from '@angular/core';
 
 
 @Component({
   selector: 'app-admin',
-  templateUrl: 'admin.component.html',
-  styleUrls: [ 'admin.component.sass' ],
-  animations: [ routerTransition() ]
+  templateUrl: './admin.component.html',
+  styleUrls: [ './admin.component.sass' ]
+
 })
 export class AdminComponent implements OnInit {
-  @HostBinding('@routerTransition') routerTransition;
 
   ngOnInit() {
   }
