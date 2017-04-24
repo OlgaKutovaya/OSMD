@@ -11,34 +11,34 @@
 >
   <p-header>Список категорий</p-header>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       Название
-    </template>
-    <template let-category="rowData" pTemplate="body">
+    </ng-template>
+    <ng-template let-category="rowData" pTemplate="body">
       <span [class.child]="category.parent">{{ category.name }}</span>
-    </template>
+    </ng-template>
   </p-column>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       Метка
-    </template>
-    <template let-category="rowData" pTemplate="body">
+    </ng-template>
+    <ng-template let-category="rowData" pTemplate="body">
       {{ category.label }}
-    </template>
+    </ng-template>
   </p-column>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       Видимость
-    </template>
-    <template let-category="rowData" pTemplate="body">
+    </ng-template>
+    <ng-template let-category="rowData" pTemplate="body">
       {{ category.visible?'Видимая':'Скрытая' }}
-    </template>
+    </ng-template>
   </p-column>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       Действия
-    </template>
-    <template let-category="rowData" pTemplate="body" class="actions-column">
+    </ng-template>
+    <ng-template let-category="rowData" pTemplate="body" class="actions-column">
       <button
         pButton
         type="button"
@@ -46,7 +46,7 @@
         class="ui-button-warning"
         (click)="editCategory(category)"
       ></button>
-    </template>
+    </ng-template>
   </p-column>
   <p-footer class="table-footer">
     <button

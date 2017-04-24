@@ -14,12 +14,12 @@
 >
   <p-header>Список документов</p-header>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       №
-    </template>
-    <template let-ri="rowIndex" pTemplate="body">
+    </ng-template>
+    <ng-template let-ri="rowIndex" pTemplate="body">
       {{ ri+1 }}
-    </template>
+    </ng-template>
   </p-column>
   <p-column
     *ngFor="let col of columns"

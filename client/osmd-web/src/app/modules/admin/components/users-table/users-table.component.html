@@ -12,27 +12,27 @@
   (onLazyLoad)="loadUsersLazy($event)"
 >
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       №
-    </template>
-    <template let-ri="rowIndex" pTemplate="body">
+    </ng-template>
+    <ng-template let-ri="rowIndex" pTemplate="body">
       {{ ri+1 }}
-    </template>
+    </ng-template>
   </p-column>
   <p-column *ngFor="let col of columns" [field]="col.field" [header]="col.header"></p-column>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       Админ
-    </template>
-    <template let-user="rowData" pTemplate="body">
+    </ng-template>
+    <ng-template let-user="rowData" pTemplate="body">
       {{ isAdmin(user)?'Да':'-' }}
-    </template>
+    </ng-template>
   </p-column>
   <p-column styleClass="actions-column">
-    <template pTemplate="header">
+    <ng-template pTemplate="header">
       Действия
-    </template>
-    <template let-user="rowData" pTemplate="body" class="actions-column">
+    </ng-template>
+    <ng-template let-user="rowData" pTemplate="body" class="actions-column">
       <button
         pButton
         type="button"
@@ -47,7 +47,7 @@
         class="ui-button-danger"
         (click)="deleteUser(user)"
       ></button>
-    </template>
+    </ng-template>
   </p-column>
   <p-footer class="table-footer">
     <span>Всего пользователей: {{ totalRecords }}</span>
