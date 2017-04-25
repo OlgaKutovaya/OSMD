@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import { Category } from 'app/shared';
+import { Category, Subcategory } from 'app/shared';
 import { CategoryService } from 'app/services';
-import { Router } from '@angular/router';
+import { Route, Router } from '@angular/router';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.categoryService.getCategoriesTree()
+    this.categoryService.getCategories()
       .subscribe(
         (categories) => {
           this.categories = categories;
@@ -30,12 +30,12 @@ export class SidebarComponent implements OnInit {
       );
   }
 
-  onCategoryClick(category) {
-    this.router.navigate([ 'category', category._id ]);
+  onSubcategoryClick(category, subcategory) {
+    console.log(this.router);
+    this.router.navigate([ 'categories', category.label, subcategory.label ]);
   }
 
-  onRootCategoryClick(event) {
-    const index = event.index;
-    this.router.navigate([ 'category', this.categories[ index ]._id ]);
+  findSelectedCategory(category: Category): boolean {
+    return false;
   }
 }

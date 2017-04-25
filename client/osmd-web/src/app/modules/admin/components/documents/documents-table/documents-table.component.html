@@ -6,7 +6,7 @@
   [paginator]="true"
   [lazy]="true"
   selectionMode="single"
-  [(selection)]="selectedDocument"
+  [(selection)]="currentDocument"
   [totalRecords]="totalRecords"
   [responsive]="true"
   (onRowSelect)="onRowSelect($event)"
@@ -33,10 +33,24 @@
       type="button"
       class="ui-button-primary"
       label="Добавить"
-      (click)="showCreationDialog()"
+      (click)="createUpdateDocument()"
     ></button>
     <span>Всего документов в базе: {{ totalRecords }}</span>
   </p-footer>
 </p-dataTable>
-<app-document-form></app-document-form>
+<p-dialog
+  [(visible)]="displayDialog"
+  [responsive]="true"
+  modal="true"
+  appendTo="body"
+  [header]="dialogHeader"
+  (onHide)="resetCurrentDocument()"
+>
+  <ng-container *ngIf="displayDialog">
+    <app-document-form
+      [document]="currentDocument"
+    ></app-document-form>
+  </ng-container>
+</p-dialog>
+
 

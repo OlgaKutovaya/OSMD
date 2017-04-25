@@ -5,8 +5,7 @@ import {
   AdminComponent,
   UsersTableComponent,
   UserDetailsComponent,
-  CategoriesTableComponent,
-  CategoryCreateUpdateComponent,
+  CategoriesListComponent,
   DocumentsTableComponent
 } from './components';
 import { AuthGuard, AdminGuard } from 'app/guards';
@@ -25,13 +24,7 @@ const routes: Routes = [
         path: 'users/:id', component: UserDetailsComponent
       },
       {
-        path: 'categories', component: CategoriesTableComponent
-      },
-      {
-        path: 'categories/edit/:id', component: CategoryCreateUpdateComponent
-      },
-      {
-        path: 'categories/add', component: CategoryCreateUpdateComponent
+        path: 'categories', component: CategoriesListComponent
       },
       {
         path: 'documents', component: DocumentsTableComponent

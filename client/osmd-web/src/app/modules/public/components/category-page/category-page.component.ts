@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { CategoryService } from 'app/services';
-import { Category } from 'app/shared';
+import { Subcategory } from 'app/shared';
 import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
@@ -12,8 +12,9 @@ import 'rxjs/add/operator/switchMap';
   styleUrls: [ './category-page.component.sass' ]
 })
 export class CategoryPageComponent implements OnInit {
-  category: Category;
-  categoryId: string;
+  subcategory: Subcategory;
+  categoryLabel: string;
+  subcategoryLabel: string;
 
   constructor(private categoryService: CategoryService,
               private router: Router,
@@ -23,17 +24,18 @@ export class CategoryPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.categoryId = params[ 'id' ];
+      this.categoryLabel = params[ 'categoryLabel' ];
+      this.subcategoryLabel = params[ 'subcategoryLabel' ];
       this.getCategory();
     });
   }
 
   getCategory() {
-    if (this.categoryId) {
-      this.categoryService.getCategory(this.categoryId)
+    if (this.categoryLabel && this.subcategoryLabel) {
+      this.categoryService.getSubcategory(this.categoryLabel, this.subcategoryLabel)
         .subscribe(
-          (category) => {
-            this.category = category;
+          (subcategory) => {
+            this.subcategory = subcategory;
           },
           (err) => {
             console.log(err);

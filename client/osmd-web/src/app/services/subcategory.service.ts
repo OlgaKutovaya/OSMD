@@ -1,44 +1,39 @@
 import { Inject, Injectable } from '@angular/core';
-import { Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { Response } from '@angular/http';
 
-import { apiUrl } from '../config';
+import { AuthHttp } from 'angular2-jwt';
+import { apiUrl } from '../config/config';
+import { Subcategory } from 'app/shared';
 import { MessageService } from 'app/services';
-import { Document } from 'app/shared';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import { AuthHttp } from 'angular2-jwt';
-
 
 @Injectable()
-export class DocumentService {
-  apiDocumentUrl: string;
-  apiDocumentAdminUrl: string;
+export class SubcategoryService {
+  private apiSubcategoryAdminUrl;
 
-  constructor(private http: Http,
-              private authHttp: AuthHttp,
+  constructor(private authHttp: AuthHttp,
               private messageService: MessageService,
               @Inject(apiUrl) private apiUrl: string) {
-    this.apiDocumentUrl = `${this.apiUrl}/documents`;
-    this.apiDocumentAdminUrl = `${this.apiUrl}/admin/documents`;
+    this.apiSubcategoryAdminUrl = `${this.apiUrl}/admin/subcategories`;
   }
 
-  getDocument(id): Observable<Document> {
-    return this.http.get(`${this.apiDocumentUrl}/${id}`)
+  updateSubcategory(id: string, updatedSubcategory: Subcategory): Observable<Subcategory> {
+    return this.authHttp.put(`${this.apiSubcategoryAdminUrl}/${id}`, updatedSubcategory)
       .map((res: Response) => res.json())
       .catch(err => this.errorHandler(err));
   }
 
-  getDocumentsWithPagination(skip = 0, limit = 10): Observable<{ documents: Document[], count: number }> {
-    const searchParams = new URLSearchParams();
-    searchParams.set('skip', skip.toString());
-    searchParams.set('limit', limit.toString());
+  addSubcategory(newSubcategory: Subcategory): Observable<Subcategory> {
+    return this.authHttp.post(`${this.apiSubcategoryAdminUrl}`, newSubcategory)
+      .map((res: Response) => res.json())
+      .catch(err => this.errorHandler(err));
+  }
 
-    const options = new RequestOptions({
-      search: searchParams
-    });
-    return this.authHttp.get(`${this.apiDocumentAdminUrl}`, options)
+  deleteSubcategory(id: string): Observable<Subcategory> {
+    return this.authHttp.delete(`${this.apiSubcategoryAdminUrl}/${id}`)
       .map((res: Response) => res.json())
       .catch(err => this.errorHandler(err));
   }

@@ -21,12 +21,13 @@ import {
   UserDetailsComponent,
   DocumentsTableComponent,
   DocumentFormComponent,
-  NavigationComponent
+  NavigationComponent,
+  CategoriesListComponent,
+  CategoryCreateUpdateComponent,
+  SubcategoryCreateUpdateComponent
 } from './components';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminGuard } from 'app/guards';
-import { CategoriesTableComponent } from './components/categories-table/categories-table.component';
-import { CategoryCreateUpdateComponent } from './components/category-create-update/category-create-update.component';
 
 @NgModule({
   imports: [
@@ -53,8 +54,9 @@ import { CategoryCreateUpdateComponent } from './components/category-create-upda
     DocumentsTableComponent,
     DocumentFormComponent,
     NavigationComponent,
-    CategoriesTableComponent,
-    CategoryCreateUpdateComponent
+    CategoriesListComponent,
+    CategoryCreateUpdateComponent,
+    SubcategoryCreateUpdateComponent
   ],
   providers: [ AdminGuard ]
 })

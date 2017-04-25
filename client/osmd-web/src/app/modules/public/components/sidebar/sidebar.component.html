@@ -1,14 +1,14 @@
-<p-accordion (onOpen)="onRootCategoryClick($event)">
-  <p-accordionTab *ngFor="let category of categories">
+<p-accordion>
+  <p-accordionTab *ngFor="let category of categories" [selected]="findSelectedCategory(category)">
     <p-header>
       {{ category.name }}
     </p-header>
-    <ul *ngFor="let child of category.children">
+    <ul *ngFor="let subcategory of category.subcategories">
       <li>
         <a
           href="#"
-          (click)="onCategoryClick(child);$event.preventDefault()"
-        >{{ child.name }}</a>
+          (click)="onSubcategoryClick(category,subcategory);$event.preventDefault()"
+        >{{ subcategory.name }}</a>
       </li>
     </ul>
   </p-accordionTab>

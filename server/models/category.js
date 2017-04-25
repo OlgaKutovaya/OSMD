@@ -1,19 +1,14 @@
 const mongoose = require('../libs/mongoose');
 
 const categorySchema = new mongoose.Schema({
-    label: {
-      type: String,
-      required: true
-    },
     name: {
       type: String,
       required: true
     },
-    description: {
-      type: String
-    },
-    picture: {
-      type: String
+    label: {
+      type: String,
+      required: true,
+      unique: true
     },
     visible: {
       type: Boolean,
@@ -22,10 +17,6 @@ const categorySchema = new mongoose.Schema({
     order: {
       type: Number,
       default: 0
-    },
-    parent: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category'
     }
   },
   {timestamps: true}
@@ -33,127 +24,48 @@ const categorySchema = new mongoose.Schema({
 
 // ============ PUBLIC METHODS===============
 
-categorySchema.statics.findCategories = function () {
-  return this.find()
-    .sort({order: 1, parent: 1})
-    .select('label name order parent');
-};
-
-
-categorySchema.statics.getCategoriesTree = function () {
+categorySchema.statics.findCategoriesWithSubs = function () {
   return this.aggregate([
     {
-      $match: {
-        'parent': null
-      }
-    },
-    {
       $lookup: {
-        from: 'categories',
-        localField: '_id',
-        foreignField: 'parent',
-        as: 'children'
-      }
-    },
-    {
-      $redact: {
-        $cond: {
-          if: {
-            $eq: ['$visible', true]
-          },
-          then: '$$DESCEND',
-          else: '$$PRUNE'
-        }
-      }
-    },
-    {
-      $project: {
-        '_id': 1,
-        'label': 1,
-        'name': 1,
-        'children._id': 1,
-        'children.label': 1,
-        'children.name': 1
-      }
-    }
-  ]);
-};
-
-categorySchema.statics.findCategoryById = function (id) {
-
-  return this.aggregate([
-    {
-      $match: {
-        '_id': new mongoose.Types.ObjectId(id),
-        'visible': true
-      }
-    },
-    {
-      $limit: 1
-    },
-    {
-      $lookup: {
-        from: 'documents',
+        from: 'subcategories',
         localField: '_id',
         foreignField: 'category',
-        as: 'documents'
+        as: 'subcategories'
       }
     },
     {
-      $redact: {
-        $cond: {
-          if: {
-            $eq: ['$visible', true]
-          },
-          then: '$$DESCEND',
-          else: '$$PRUNE'
-        }
-      }
-    },
-    {
-      $project: {
-        '_id': 1,
+      $sort: {
+        'order': 1,
         'name': 1,
-        'label': 1,
-        'documents._id': 1,
-        'documents.title': 1,
-        'documents.label': 1,
-        'documents.description': 1,
-        'documents.price': 1,
-        'documents.tags': 1,
       }
     }
   ]);
 };
+
+categorySchema.statics.findCategoryByQuery = function (query) {
+  return this.findOne(query);
+};
+
 // ============ PUBLIC METHODS END===============
 
 
 // ============ ADMIN METHODS===============
-
-categorySchema.statics.findCategoriesForAdmin = function () {
-  return this.aggregate()
-    .match({parent: null})
-    .lookup({from: 'categories', localField: '_id', foreignField: 'parent', as: 'children'});
-};
-
-categorySchema.statics.findCategoryByIdForAdmin = function (id) {
-  return this.aggregate()
-    .match({_id: new mongoose.Types.ObjectId(id)})
-    .limit(1)
-    .lookup({from: 'categories', localField: '_id', foreignField: 'parent', as: 'children'})
-    .lookup({from: 'documents', localField: '_id', foreignField: 'category', as: 'documents'});
-};
-
-categorySchema.statics.createCategory = function (newCategory) {
+categorySchema.statics.addCategory = function (newCategory) {
   return this.create(newCategory);
+};
+
+categorySchema.statics.findCategories = function () {
+  return this.find()
+    .sort({'order': 1, 'name': 1});
+};
+
+categorySchema.statics.updateCategoryById = function (id, updatedCategory) {
+  return this.findByIdAndUpdate(id, updatedCategory, {new: true});
 };
 
 categorySchema.statics.deleteCategoryById = function (id) {
   return this.findByIdAndRemove(id);
-};
-
-categorySchema.statics.updateCategoryById = function (id, newCategory) {
-  return this.findByIdAndUpdate(id, newCategory, {new: true});
 };
 
 // ============ ADMIN METHODS END===============

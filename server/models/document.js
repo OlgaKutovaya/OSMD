@@ -1,4 +1,6 @@
-const mongoose = require('../libs/mongoose');
+const
+  mongoose = require('../libs/mongoose'),
+  Promise = require('bluebird');
 
 const documentSchema = new mongoose.Schema({
     title: {
@@ -69,16 +71,19 @@ documentSchema.statics.getAllDocuments = function (skip, limit) {
   }
 
   return documentsPromise;
-  /*
-   .group({
-   '_id': '$category.name',
-   'documents': {'$push': {'title': '$title', '_id': '$_id'}},
-   'subcategories': {'$push': '$subcategory'}
-   });*/
 };
 
-documentSchema.statics.findDocumentsForAdmin = function () {
-  return this.find();
+documentSchema.statics.findDocumentsForAdmin = function (skip, limit) {
+  const documentsPromise = this.aggregate([
+    {
+      $skip: skip
+    },
+    {
+      $limit: limit
+    }
+  ]);
+  const countPromise = this.count();
+  return Promise.all([documentsPromise, countPromise]);
 };
 
 documentSchema.statics.getDocumentsByCategoryId = function (categoryId) {
@@ -89,43 +94,27 @@ documentSchema.statics.getDocumentsByCategoryId = function (categoryId) {
     });
 };
 
-/**
- *
- * @param newProduct:Object
- * @returns newProduct
- */
+
 documentSchema.statics.createDocument = function (newDocument) {
   return this.create(newDocument);
 };
-/**
- *
- * @param id
- * @returns {Query}
- */
+
+
 documentSchema.statics.removeDocumentById = function (id) {
   return this.findByIdAndRemove(id);
 };
-/**
- *
- * @param id
- * @param newProduct
- * @returns {Query}
- */
+
+
 documentSchema.statics.updateDocumentById = function (id, newProduct) {
   return this.findByIdAndUpdate(id, newProduct, {new: true});
 };
-/**
- *
- * @param id
- * @returns {Query}
- */
+
+
 documentSchema.statics.findDocumentById = function (id) {
   return this.findById(id);
 };
 
-/**
- * Init Product model
- */
+
 const Document = mongoose.model('Document', documentSchema);
 
 module.exports = Document;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 import { DocumentService, CategoryService, AuthService, ValidationService, MessageService } from 'app/services';
@@ -11,7 +11,7 @@ import { Document, SelectOptions } from 'app/shared';
   styleUrls: [ 'document-form.component.sass' ]
 })
 export class DocumentFormComponent implements OnInit {
-
+  @Input() document: Document;
   categoryOptions: SelectOptions[] = [];
   documentForm: FormGroup;
   category: AbstractControl;
@@ -54,15 +54,7 @@ export class DocumentFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.categoryService.getCategoryOptionsForAdmin()
-      .subscribe(
-        (categoryOptions) => {
-          this.categoryOptions = categoryOptions;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+
   }
 
   appendDataToUpload(event) {

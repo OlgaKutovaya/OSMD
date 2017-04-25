@@ -1,5 +1,4 @@
-<div *ngIf="fetched">
-  <h3>{{ getTitle() }}</h3>
+<div>
   <form
     [formGroup]="categoryForm"
     class="ui-g"
@@ -27,14 +26,14 @@
       >
     </div>
     <div class="ui-g-12">
-      <label for="description" class="form-helper">Описание</label>
-      <textarea
-        pInputTextarea
+      <label for="order" class="form-helper">Order</label>
+      <input
+        pInputText
         class="ui-g-12"
-        id="description"
-        type="text"
-        formControlName="description"
-      ></textarea>
+        id="order"
+        type="number"
+        formControlName="order"
+      >
     </div>
     <div class="ui-g-12">
       <label>Видимость</label>
@@ -51,22 +50,19 @@
       ></button>
       <button
         pButton
+        type="button"
         label="Отмена"
         (click)="backToCategories()"
       ></button>
       <button
-        *ngIf="currentCategory._id"
+        *ngIf="category?._id"
         class="ui-button-danger"
+        type="button"
         pButton
         label="Удалить"
         (click)="confirmDelete()"
       ></button>
     </div>
   </form>
-  <div *ngIf="currentCategory.children?.length">
-    <ul>
-      <li *ngFor="let child of currentCategory.children">{{ child.name }}</li>
-    </ul>
-  </div>
 </div>
 

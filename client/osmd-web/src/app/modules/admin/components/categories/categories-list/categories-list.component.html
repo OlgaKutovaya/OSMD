@@ -1,0 +1,65 @@
+<h3>Список категорий</h3>
+<ul>
+  <li *ngFor="let category of categories">
+    {{ category.name }}
+    <button
+      pButton
+      icon="fa-pencil"
+      class="ui-button-warning"
+      (click)="createUpdateCategory(category)"
+    ></button>
+    <ul>
+      <li *ngFor="let subcategory of category.subcategories">
+        {{ subcategory.name }}
+        <button
+          pButton
+          icon="fa-pencil"
+          class="ui-button-warning"
+          (click)="createUpdateSubcategory(category,subcategory)"
+        ></button>
+      </li>
+      <li>
+        <button
+          pButton
+          icon="fa-plus"
+          label="Добавить"
+          (click)="createUpdateSubcategory(category)"
+        ></button>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <button
+      pButton
+      icon="fa-plus"
+      label="Добавить категорию"
+      (click)="createUpdateCategory()"
+    ></button>
+  </li>
+</ul>
+
+<p-dialog
+  [(visible)]="displayDialog"
+  [responsive]="true"
+  modal="true"
+  appendTo="body"
+  [header]="dialogHeader"
+  (onHide)="resetCurrentCategories()"
+>
+  <ng-container [ngSwitch]="action">
+    <div *ngSwitchCase="'createUpdateCategory'">
+      <app-category-create-update
+        [category]="currentCategory"
+        (onCategoryEdit)="onCategoryEdited($event)"
+      ></app-category-create-update>
+    </div>
+    <div *ngSwitchCase="'createUpdateSubcategory'">
+      <app-subcategory-create-update
+        [subcategory]="currentSubcategory"
+        [categoryId]="currentCategory?._id"
+        (onSubcategoryEdit)="onSubcategoryEdited($event)"
+      >
+      </app-subcategory-create-update>
+    </div>
+  </ng-container>
+</p-dialog>

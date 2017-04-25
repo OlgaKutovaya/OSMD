@@ -1,4 +1,18 @@
-<div *ngIf="category">
-  <h2>{{ category.name }}</h2>
-  <p>{{ category | json }}</p>
+<div *ngIf="subcategory">
+  <h2>{{ subcategory.name }}</h2>
+  <ul>
+    <li>label - {{ subcategory.label }}</li>
+    <li>description - {{ subcategory.description }}</li>
+    <li>visible - {{ subcategory.visible }}</li>
+    <li>order - {{ subcategory.order }}</li>
+    <li>menuItem - {{ subcategory.category }}</li>
+    <li>
+      documents
+      <ul>
+        <li *ngFor="let document of subcategory.documents">
+          {{ document|json }}
+        </li>
+      </ul>
+    </li>
+  </ul>
 </div>

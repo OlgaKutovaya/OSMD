@@ -27,8 +27,8 @@ export class UserService {
 
   getAllUsersForAdmin(skip: number, limit: number): Observable<{ users: User[], count: number }> {
     const searchParams = new URLSearchParams();
-    searchParams.set('skip', skip.toString(10));
-    searchParams.set('limit', limit.toString(10));
+    searchParams.set('skip', skip.toString());
+    searchParams.set('limit', limit.toString());
 
     const options = new RequestOptions({
       search: searchParams

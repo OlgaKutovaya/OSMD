@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 
 import { AuthHttp } from 'angular2-jwt';
 import { apiUrl } from '../config/config';
-import { Category, SelectOptions } from 'app/shared';
+import { Category, Subcategory } from 'app/shared';
 import { MessageService } from 'app/services';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -29,14 +29,8 @@ export class CategoryService {
       .catch(err => this.errorHandler(err));
   }
 
-  getCategoriesTree(): Observable<Category[]> {
-    return this.http.get(`${this.apiCategoryUrl}/tree`)
-      .map((res: Response) => res.json())
-      .catch(err => this.errorHandler(err));
-  }
-
-  getCategory(id: string): Observable<Category> {
-    return this.http.get(`${this.apiCategoryUrl}/${id}`)
+  getSubcategory(categoryLabel: string, subcategoryLabel: string): Observable<Subcategory> {
+    return this.http.get(`${this.apiCategoryUrl}/${categoryLabel}/${subcategoryLabel}`)
       .map((res: Response) => res.json())
       .catch(err => this.errorHandler(err));
   }
@@ -55,31 +49,31 @@ export class CategoryService {
       .catch(err => this.errorHandler(err));
   }
 
-  getCategoryOptionsForAdmin(): Observable<SelectOptions[]> {
-    return this.authHttp.get(this.apiCategoryAdminUrl)
-      .map((res: Response) => res.json() as Category[])
-      .map(categories => {
-        const options = [];
-        for (const category of categories) {
-          if (!category.parent) {
-            options.push({
-              label: category.name,
-              value: category._id
-            });
-          }
-        }
-        for (const category of categories) {
-          if (category.parent) {
-            const index = options.findIndex(opt => opt.value === category.parent);
-            if (index > -1) {
-              options.splice(index + 1, 0, { label: ' - ' + category.name, value: category._id });
-            }
-          }
-        }
-        return options;
-      })
-      .catch(err => this.errorHandler(err));
-  }
+  /*getCategoryOptionsForAdmin(): Observable<SelectOptions[]> {
+   return this.authHttp.get(this.apiCategoryAdminUrl)
+   .map((res: Response) => res.json() as Category[])
+   .map(categories => {
+   const options = [];
+   for (const category of categories) {
+   if (!category.parent) {
+   options.push({
+   label: category.name,
+   value: category._id
+   });
+   }
+   }
+   for (const category of categories) {
+   if (category.parent) {
+   const index = options.findIndex(opt => opt.value === category.parent);
+   if (index > -1) {
+   options.splice(index + 1, 0, { label: ' - ' + category.name, value: category._id });
+   }
+   }
+   }
+   return options;
+   })
+   .catch(err => this.errorHandler(err));
+   }*/
 
   updateCategory(id: string, updatedCategory: Category): Observable<Category> {
     return this.authHttp.put(`${this.apiCategoryAdminUrl}/${id}`, updatedCategory)

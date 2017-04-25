@@ -9,7 +9,8 @@ import {
   UserService,
   ValidationService,
   authHttpServiceFactory,
-  CategoryService
+  CategoryService,
+  SubcategoryService
 } from 'app/services';
 import { AuthGuard } from 'app/guards';
 import { AuthHttp } from 'angular2-jwt';
@@ -26,6 +27,7 @@ import { ConfirmationService } from 'primeng/primeng';
     AuthService,
     UserService,
     CategoryService,
+    SubcategoryService,
     DocumentService,
     ValidationService,
     {

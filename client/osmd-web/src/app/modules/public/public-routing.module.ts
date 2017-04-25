@@ -14,7 +14,7 @@ const publicChildrenRoutes: Routes = [
     component: AuthenticationComponent
   },
   {
-    path: 'category/:id',
+    path: 'categories/:categoryLabel/:subcategoryLabel',
     component: CategoryPageComponent
   }
 ];
