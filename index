@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>База знаний ОСМД</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="short icon" href="img/index/logo.png">
+</head>
+<body>
+<header class="container-fluid header">
+    <div class="row">
+        <a href="#" class="col-md-3 logo"><img src="img/index/logo.png" alt="logo"></a>
+        <div class="col-md-9">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-file-alt icon"></i>
+                        Документы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-piggy-bank icon"></i>
+                        Помощь проекту
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="far fa-comment"></i>
+                        Чат со специалистом
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Вход
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="container-fluid wrapper">
+    <div class="row">
+        <aside class="col-md-3 aside">
+            <div class="input-search">
+                <input type="search" name="search" placeholder="Поиск...">
+            </div>
+            <ul class="nav flex-column sidebar-menu">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Инструкции</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Первые шаги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Как начать управлять</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Создание ОСМД</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Решения горсовета</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Текущая деятельность ОСМД</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Бухгалтерия в ОСМД</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Борьба с монополистами</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ближайшие мероприятия</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Обслуживающие организации</a>
+                </li>
+            </ul>
+        </aside>
+        <main class="col-md-9 content">
+            <h2 class="text-center title">Библиотека знаний ОСМД</h2>
+            <img class="float-right content-img" src="img/index/house.png" alt="">
+            <p class="paragraph text-justify">11 июня 2009 года принят Закон Украины «Про Загальнодержавну програму
+                реформування і
+                розвитку житлово-комунального господарства на 2009-2014 роки». Целью программы является выполнение
+                мероприятий по повышению эффективности и надежности функционирования жилищно-коммунального хозяйства,
+                обеспечение
+                устойчивого развития и удовлетворение потребностей населения в жилищно-коммунальных услугах,
+                соответствующих установленным нормативам, национальным стандартам, удовлетворение потребностей
+                населения, жилищно-коммунальных услуг.
+            </p>
+            <p class="paragraph text-justify">На обеспечения выполнения данного мероприятия предусмотрено:</p>
+            <ul class="nav paragraph">
+                <li class="nav-item">предоставление государственной поддержки для реализации инвестиционных проектов по
+                    техническому
+                    переоборудованию и капитальному ремонту жилых домов в которых создаются или уже созданы объединения
+                    совладельцев многоквартирных домов (ОСМД).
+                </li>
+                <li class="nav-item">частичное погашение основной суммы кредитов, проценты по кредитам,
+                    лизинговые платежи.
+                </li>
+            </ul>
+            <p class="paragraph text-justify">Одним из важнейших мероприятий является усиление влияния жителей домов на
+                условия
+                проживания и качество
+                обслуживания, путём создания объединения совладельцев многоквартирного дома.</p>
+        </main>
+    </div>
+</div> <!--/.wrapper-->
+<footer class="container-fluid footer">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://482.solutions" target="_blank">
+                        &#9400; 482.Solutions, 2018 (https://482.solutions)
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script>
+    var config = {
+        apiKey: "AIzaSyC7sRFps6do_YtRbjlL4mvjwmfoXBJ0wX4",
+        authDomain: "osmd-42b57.firebaseapp.com",
+        databaseURL: "https://osmd-42b57.firebaseio.com",
+        projectId: "osmd-42b57",
+        storageBucket: "osmd-42b57.appspot.com",
+        messagingSenderId: "115839157500"
+    };
+    firebase.initializeApp(config);
+</script>
+</body>
+</html>
